@@ -8,7 +8,7 @@
         integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
-       * {
+        * {
             box-sizing: border-box;
         }
 
@@ -51,24 +51,33 @@
 
 <body>
 
-    <form class="example"  style="margin:auto;max-width:300px">
+    <form class="example" style="margin:auto;max-width:300px">
         <input type="text" placeholder="Search any Venue or Show " name="search">
         <button type="submit"><i class="fa fa-search"></i></button>
     </form>
     <div style="margin-left: 1%;" class="container">
-        <h3>{{venue}}</h3>
+        {% for venue in list%}
+        <h3>{{venue.venue_name}}</h3>
+        {% for show in venue.shows%}
         <div>
             <form>
-                <h4>Show:{{show}}</h4>
-                <span>Total Ticket:{{total_ticket}}</span>
+                <label>Show:{{show.show_name}}</label>
+
                 <br>
-                <span id="AvailableTicket">Available ticket:{available_ticket}}</span><br>
-                <button type="submit" class="btn btn-primary">Book</button>
+                <span id="AvailableTicket">Available ticket:{{show.min_fare}}</span><br>
+                <label>Fare per Ticket</label>
+                <input name="ticketrate" value="{{show.min_fare}}" disabled /><br>
+                <label>No. of Tickets</label>
+                <input name="ticketCount" />
+                <br>
+                <button type="submit" name="book-{{venue.venue_id}}-{{show.show_id}}"
+                    class="btn btn-primary">Book</button>
 
             </form>
-
         </div>
-
+        {%endfor%}
+        <hr>
+        {%endfor%}
     </div>
     <hr>
 </body>

@@ -20,8 +20,8 @@
 </style>
 
 <body>
-    <h1>Customer Login Page</h1>
-    <form>
+    <h1>User Login Page</h1>
+    <form method="POST" id="login-page">
         <br>
         <label>Login ID</label>
         <input style="margin-left: .5%;" id="loginId" name="loginId" placeholder="Enter login id" type="text"
@@ -34,10 +34,10 @@
         <input id="password" name="password" placeholder="Enter your password" type="password" class="rounded"
             required /><br><br>
         <button type="submit" class="btn btn-primary">Login</button>
-        <button type="submit" class="btn btn-primary">Register</button>
     </form>
     <br>
-    <a href="adminlogin.html">Go to Admin Login Page</a>
+    <p>New to portal. <a href="/user/register">Register here</a></p>
+    <a href="admin/login">Go to Admin Login Page</a>
 </body>
 
 </html>
