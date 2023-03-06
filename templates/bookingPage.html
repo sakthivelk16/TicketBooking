@@ -56,39 +56,25 @@
         <a href="/user/{{userId}}/home">Profile</a>
 
     </div>
-    <form class="example" style="margin:auto;max-width:300px">
-        <input type="text" placeholder="Search any Venue or Show " name="search">
-        <button type="submit"><i class="fa fa-search"></i></button>
-    </form>
     <div style="margin-left: 1%;" class="container">
-        {% for venue in list%}
         <h3>{{venue.venue_name}}</h3>
-        {% for show in venue.shows%}
         <span>
-            <form method="POST" id="ShowDetails">
+            <form method="POST" id="bookDetails">
                 <label>Show:{{show.show_name}}</label><br>
-                <label>Show Time:{{show.time}}</label><br>
+                <label>Show Time:{{currentVenueShow.time}}</label><br>
 
-                {%if show.is3d%}
-                <label>Movie Type: 3D</label><br>
-                <label>Show Price:{{[venue.price2D, show.min_fare]|max}}</label><br>
-                {%else%}
-                <label>Movie Type:2D</label><br>
+                <span id="AvailableTicket">Available ticket:{{availabelTicket}}</span><br>
+                <label>Fare per Ticket</label>
+                <input name="ticketrate" value="{{show.min_fare}}" disabled /><br>
+                <label>No. of Tickets</label>
+                <input type="number" name="ticketCount" min="1" max="{{availabelTicket}}"/>
+                <br>
+                <button type="submit" name="Book"
+                    class="btn btn-primary">Book</button>
 
-                <label>Show Price:{{[venue.price2D, show.min_fare]|max}}</label><br>
-                {%endif%}
-
-                {%if show.available_ticket==0%}
-                <button type="submit" disabled>Houseful</button>
-
-                {%else%}
-                <button type="submit" name="book" value="book-{{show.sv_id}}" class="btn btn-primary">Book</button>
-                {%endif%}
             </form>
         </span>
-        {%endfor%}
         <hr>
-        {%endfor%}
     </div>
     <hr>
 </body>

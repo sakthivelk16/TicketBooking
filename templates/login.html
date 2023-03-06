@@ -21,6 +21,9 @@
 
 <body>
     <h1>User Login Page</h1>
+    {% if error %}
+    <p style="color:red;">Either Username or Password is wrong. Please try again</p>
+    {% endif%}
     <form method="POST" id="login-page">
         <br>
         <label>Login ID</label>

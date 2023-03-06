@@ -9,6 +9,8 @@ class Venue(db.Model):
     place = db.Column(db.String(), nullable=False)
     location = db.Column(db.String())
     max_capacity = db.Column(db.Integer, nullable=False)
+    fare2D=db.Column(db.Integer, nullable=False)
+    fare3D=db.Column(db.Integer, nullable=False)
     venueShows = db.relationship("Show", backref="venues", secondary="show_venue")
 
 
@@ -16,7 +18,9 @@ class Show(db.Model):
     show_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     show_name = db.Column(db.String(), unique=True, nullable=False)
     min_fare = db.Column(db.Integer, nullable=False)
+    is3d= db.Column(db.Boolean, nullable=False)
     tags = db.relationship("Showtag", backref="shows")
+
 
 
 class ShowVenue(db.Model):
@@ -27,7 +31,6 @@ class ShowVenue(db.Model):
     venue_id = db.Column(db.Integer,
                          db.ForeignKey("venue.venue_id"),
                          nullable=False)
-    price = db.Column(db.Integer, nullable=False)
     time = db.Column(db.DateTime)
 
 
@@ -43,8 +46,8 @@ class Users(db.Model):
     user_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     first_name = db.Column(db.String(), nullable=False)
     last_name = db.Column(db.String())
-    phone_number = db.Column(db.String(), unique=True)
-    email_id = db.Column(db.String(), unique=True)
+    phone_number = db.Column(db.String())
+    email_id = db.Column(db.String())
     username = db.Column(db.String(), unique=True, nullable=False)
     password = db.Column(db.String(), nullable=False)
     mybookings = db.relationship("ShowVenue",

@@ -17,6 +17,9 @@
 
 <body>
     <h1>User Registration</h1>
+    {% if exist == "True" %}
+    <p style="color:red;">This Id already exist. please choose another username</p>
+    {% endif%}
     <form method="POST" id="user-details">
         <br>
         <label>First Name</label>

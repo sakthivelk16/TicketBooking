@@ -52,43 +52,25 @@
 <body>
     <div style="text-align: right;">
         <a href="/user/{{userId}}/home">Home</a>
-        <a href="/user/{{userId}}/home">Bookings</a>
         <a href="/user/{{userId}}/home">Profile</a>
+        <a href="/user/{{userId}}/home">Log out</a>
 
     </div>
-    <form class="example" style="margin:auto;max-width:300px">
-        <input type="text" placeholder="Search any Venue or Show " name="search">
-        <button type="submit"><i class="fa fa-search"></i></button>
-    </form>
     <div style="margin-left: 1%;" class="container">
-        {% for venue in list%}
-        <h3>{{venue.venue_name}}</h3>
-        {% for show in venue.shows%}
+        {%for each in bookings%}
+
+  
         <span>
-            <form method="POST" id="ShowDetails">
-                <label>Show:{{show.show_name}}</label><br>
-                <label>Show Time:{{show.time}}</label><br>
+            <form method="POST" id="bookDetails">
+                <label>{{each.venue_name}}-{{each.show_name}}</label><br>
+                <label>Show Time:{{each.time}}</label><br>
 
-                {%if show.is3d%}
-                <label>Movie Type: 3D</label><br>
-                <label>Show Price:{{[venue.price2D, show.min_fare]|max}}</label><br>
-                {%else%}
-                <label>Movie Type:2D</label><br>
+                <button type="submit" name="Rate" class="btn btn-primary">Rate</button>
 
-                <label>Show Price:{{[venue.price2D, show.min_fare]|max}}</label><br>
-                {%endif%}
-
-                {%if show.available_ticket==0%}
-                <button type="submit" disabled>Houseful</button>
-
-                {%else%}
-                <button type="submit" name="book" value="book-{{show.sv_id}}" class="btn btn-primary">Book</button>
-                {%endif%}
             </form>
         </span>
         {%endfor%}
         <hr>
-        {%endfor%}
     </div>
     <hr>
 </body>
