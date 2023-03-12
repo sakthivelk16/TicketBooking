@@ -8,44 +8,17 @@
         integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
-        * {
-            box-sizing: border-box;
+        /* table,
+        th,
+        td {
+            border: 1px solid black;
+            border-collapse: collapse;
         }
 
-        /* Style the search field */
-        form.example input[type=text] {
-            padding: 10px;
-            font-size: 17px;
-            border: 1px solid grey;
-            float: left;
-            width: 80%;
-            background: #f1f1f1;
-        }
-
-        /* Style the submit button */
-        form.example button {
-            float: left;
-            width: 20%;
-            padding: 10px;
-            background: #2196F3;
-            color: white;
-            font-size: 17px;
-            border: 1px solid grey;
-            border-left: none;
-            /* Prevent double borders */
-            cursor: pointer;
-        }
-
-        form.example button:hover {
-            background: #0b7dda;
-        }
-
-        /* Clear floats */
-        form.example::after {
-            content: "";
-            clear: both;
-            display: table;
-        }
+        .center {
+            margin-left: auto;
+            margin-right: auto;
+        } */
     </style>
 </head>
 
@@ -57,22 +30,28 @@
 
     </div>
     <div style="margin-left: 1%;" class="container">
-        {%for each in bookings%}
+        <table class="table">
+            <tr>
+                <th scope="col">Venue name - Show Name</th>
+                <th scope="col">Show Timing</th>
+                <th scope="col">Rate</th>
+            </tr>
+            {%for each in bookings%}
+            <tr>
+                <td>{{each.venue_name}}-{{each.show_name}}</td>
+                <td>{{each.time}}</td>
+                <td>
+                    <a href="/user/{{userId}}/rate/{{each.show_id}}" name="rate">Rate</a>
+                </td>
+            </tr>
+            {%endfor%}
+        </table>
 
-  
-        <span>
-            <form method="POST" id="bookDetails">
-                <label>{{each.venue_name}}-{{each.show_name}}</label><br>
-                <label>Show Time:{{each.time}}</label><br>
 
-                <button type="submit" name="Rate" class="btn btn-primary">Rate</button>
 
-            </form>
-        </span>
-        {%endfor%}
-        <hr>
+
     </div>
-    <hr>
+
 </body>
 
 </html>

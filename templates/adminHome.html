@@ -64,23 +64,24 @@
         <a href="/admin/{{adminId}}/show/create">Create New Show</a>
         <br> {%for each in Venue%}
         <br> <b>{{each.venue_name}}&emsp;</b>
-        <button type="submit" name="add" class="btn btn-secondary">Add New Show</button>
+        <a href="/admin/{{adminId}}/venue/{{each.venue_id}}/allocate" name="add" class="btn btn-secondary">Add New
+            Show</a>
 
-        {%for each1 in each.shows%}
+            {%for each1 in each.shows%}
 
-        <div>
-            <label>{{each1.show_name}}</label><br>
-            <label>{{each1.time}}</label><br>
+            <div>
+                <label>{{each1.show_name}}</label><br>
+                <label>{{each1.time}}</label><br>
 
 
-            <a name="edit" href="/admin/{{adminId}}/edit/{{svid}}">Edit</a>
-            <a name="delete" href="/admin/{{adminId}}/delete/{{svid}}">Delete</a>
+                <a name="edit" href="/admin/{{adminId}}/edit/{{svid}}">Edit</a>
+                <a name="delete" href="/admin/{{adminId}}/delete/{{svid}}">Delete</a>
 
-        </div>
-        {%endfor%}
+            </div>
+            {%endfor%}
 
-        {%endfor%}
-        <hr>
+            {%endfor%}
+            <hr>
     </div>
     <hr>
 </body>

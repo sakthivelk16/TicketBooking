@@ -11,11 +11,11 @@ def login():
         u1 = Users.query.filter_by(username=username,
                                    password=password).first()
         if u1 is None:
-            return render_template("login.html", error=True)
+            return render_template("login/login.html", error=True)
 
         return redirect("/user/" + str(u1.user_id) + "/home")
 
-    return render_template("login.html")
+    return render_template("login/login.html")
 
 
 @app.route("/admin/login", methods={"GET", "POST"})
@@ -26,8 +26,8 @@ def adminLogin():
         u1 = Admin.query.filter_by(username=username,
                                    password=password).first()
         if u1 is None:
-            return render_template("adminlogin.html", error=True)
+            return render_template("login/adminlogin.html", error=True)
 
         return redirect("/admin/" + str(u1.admin_id) + "/home")
 
-    return render_template("adminlogin.html")
+    return render_template("login/adminlogin.html")

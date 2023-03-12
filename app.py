@@ -56,7 +56,8 @@ def userHome(userID):
                 innerjson["show_name"] = currentShow.show_name
                 innerjson["is3d"] = currentShow.is3d
                 innerjson["available_ticket"] = e.max_capacity - soldTick[
-                    ee.sv_id]
+                    ee.sv_id] if ee.sv_id in soldTick else e.max_capacity
+
                 innerjson["min_fare"] = currentShow.min_fare
                 eachjson["shows"].append(innerjson)
             list.append(eachjson)
@@ -67,7 +68,6 @@ def userHome(userID):
 # db.session.execute(db.select(ShowVenue).order_by(ShowVenue.venue_id)).scalars()
 
 
-
 @app.route("/admin/<int:a_id>/home", methods={"GET", "POST"})
 def adminHome(a_id):
     if request.method == "POST":
@@ -76,7 +76,7 @@ def adminHome(a_id):
         u1 = Admin.query.filter_by(username=username,
                                    password=password).first()
         if u1 is None:
-            return render_template("adminlogin.html", error=True)
+            return render_template("login/adminlogin.html", error=True)
 
         return redirect("/admin/" + str(u1.admin_id) + "/home")
 
@@ -104,12 +104,12 @@ def adminHome(a_id):
     return render_template("adminHome.html", Venue=list, adminId=a_id)
 
 
-
 from application.controllers.login import *
 from application.controllers.register import *
 from application.controllers.userBookings import *
 from application.controllers.venueAdmin import *
 from application.controllers.showAdmin import *
+from application.controllers.adminShowallocation import *
 
 if __name__ == "__main__":
     app.debug = True

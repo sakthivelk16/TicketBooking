@@ -12,6 +12,7 @@ def myBookings(userID):
         currentVenue = Venue.query.get(eachShowVenue.venue_id)
         json = {}
         json['venue_name'] = currentVenue.venue_name
+        json['show_id'] = currentShow.show_id
         json['show_name'] = currentShow.show_name
         json['time'] = eachShowVenue.time
         final.append(json)
@@ -41,7 +42,7 @@ def bookTicket(userID, svId):
         else:
             soldTick[each.sv_id] = each.ticket_count
     availabelTicket = currentVenue.max_capacity - soldTick[
-        currentVenueShow.sv_id]
+        currentVenueShow.sv_id] if currentVenueShow.sv_id in soldTick else currentVenue.max_capacity
     return render_template('bookingPage.html',
                            userId=userID,
                            show=currentShow,

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+
+    <h1>Search</h1>
+
+    <form method="post" id="searchVenue">
+        <label for="venueSearch">Search by Venue:</label><br> 
+        <input type="radio" name="venue" value="1" required>search Should match Exact word</input><br>
+        <input type="radio" name="venue" value="2">Begin with Search input</input><br>
+        <input type="radio" name="venue" value="3">End with Search input</input><br>
+        <input type="radio" name="venue" value="4">contains Search input</input><br>
+        <input type="search" id="venueSearch" name="venueSearch" required>
+        <input type="submit">
+    </form>
+<hr>
+    <form method="post" id="searchShow">
+        <label for="showSearch">Search by show:</label><br>
+        <input type="radio" name="show" value="1" required>search Should match Exact word</input><br>
+        <input type="radio" name="show" value="2">Begin with Search input</input><br>
+        <input type="radio" name="show" value="3">End with Search input</input><br>
+        <input type="radio" name="show" value="4">contains Search input</input><br>
+        <input type="search" id="showSearch" name="showSearch" required><br>
+        <input type="submit">
+    </form>
+<hr>
+
+    <form method="post" id="searchTag">
+        <label for="tagSearch">Search by Tags:</label><br>
+        <input type="radio" name="tags" value="1" required>search Should match Exact word</input><br>
+        <input type="radio" name="tags" value="2">Begin with Search input</input><br>
+        <input type="radio" name="tags" value="3">End with Search input</input><br>
+        <input type="radio" name="tags" value="4">contains Search input</input><br>
+        <input type="search" id="tagSearch" name="tagSearch" required>
+        <input type="submit">
+    </form>
+<hr>
+</body>
+
+</html>
