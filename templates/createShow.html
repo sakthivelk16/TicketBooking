@@ -14,26 +14,38 @@
 </head>
 
 <body>
+    {% if name==None%}
     <h1 style="text-align:center">Create New Show</h1>
-    <form>
+    {%else%}
+    <h1 style="text-align:center">Edit Show</h1>
+    {% endif%}
+
+    {% if error %}
+    <p style="color:red;">Another Show exists with same Name. please choose different Name</p>
+    {% endif%}
+    <form method="POST" id="createShow">
         <div class="mb-3">
-            <label for="venueName" class="form-label">Venue Name</label>
-            <input type="text" class="form-control" id="venueName" value="{{venueName}}" disabled>
             <label for="showName" class="form-label">Show Name</label>
-            <input type="text" class="form-control" id="showName">
-            <label for="rating" class="form-label">Rating</label>
-            <input type="text" class="form-control" id="rating"> 
+            <input type="text" class="form-control" name="showName" required value="{{name}}">
+
             <label for="tags" class="form-label">Tags</label>
-            <input type="text" class="form-control" id="tags">
-             <label for="timing" class="form-label">Timing</label>
-            <input type="text" class="form-control" id="timing"> 
+            <input type="text" class="form-control" name="tags" required value="{{tags}}"
+                placeholder="In case of multiple tags. Add tags with semicolon">
+            <label for="duration" class="form-label">Duration</label>
+            <input type="number" class="form-control" name="duration" required value="{{duration}}">
             <label for="price" class="form-label">Price</label>
-            <input type="text" class="form-control" id="price"> 
-           
+            <input type="number" class="form-control" name="price" required value="{{price}}">
+            <input type="checkbox" name="is3D" id="is3D" {{"checked" if is3d}}>
+            <label for="is3D" class="form-label" >3D</label>
+
+
 
         </div>
-
+        {% if name==None%}
         <button type="submit" class="btn btn-primary">Create New Show</button>
+        {%else%}
+        <button type="submit" class="btn btn-primary">Edit Show</button>
+        {%endif%}
     </form>
 </body>
 

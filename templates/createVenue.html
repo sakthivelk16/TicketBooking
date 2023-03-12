@@ -15,21 +15,42 @@
 </head>
 
 <body>
+    {% if not venue.venue_name%}
     <h1 style="text-align:center">Create New Venue</h1>
-    <form>
+    {%else%}
+    <h1 style="text-align:center">Edit Venue</h1>
+    {% endif%}
+
+
+    {% if error %}
+    <p style="color:red;">Another Venue exists with same Name. please choose different Name</p>
+    {% endif%}
+    <form method="POST" id="createvenue">
         <div class="mb-3">
-            <label for="inputName" class="form-label">Venue Name</label>
-            <input type="text" class="form-control" id="inputName">
+            <label for="name" class="form-label">Venue Name</label>
+            {% if error %}
+            <input type="text" class="form-control" name="venue_name" value="" required>
+            {%else%}
+            <input type="text" class="form-control" name="venue_name" value="{{venue.venue_name}}" required>
+            {% endif%}
             <label for="place" class="form-label">Place</label>
-            <input type="text" class="form-control" id="place">
+            <input type="text" class="form-control" name="place" value="{{venue.place}}">
             <label for="location" class="form-label">Location</label>
-            <input type="text" class="form-control" id="location">
+            <input type="text" class="form-control" name="location" value="{{venue.location}}">
             <label for="capacity" class="form-label">Capacity</label>
-            <input type="text" class="form-control" id="capacity">
+            <input type="number" class="form-control" name="max_capacity" value="{{venue.max_capacity}}" required>
+            <label for="fare2D" class="form-label">Fare 2D</label>
+            <input type="number" class="form-control" name="fare2D" value="{{venue.fare2D}}" required>
+            <label for="fare3D" class="form-label">Fare 3D</label>
+            <input type="number" class="form-control" name="fare3D" value="{{venue.fare3D}}" required>
 
         </div>
 
-        <button type="submit" class="btn btn-primary">Create a Venue</button>
+        {% if not venue.venue_name%}
+        <button type="submit" class="btn btn-primary">Create New Venue</button>
+        {%else%}
+        <button type="submit" class="btn btn-primary">Edit Venue</button>
+        {%endif%}
     </form>
 </body>
 

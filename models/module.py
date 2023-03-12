@@ -9,18 +9,19 @@ class Venue(db.Model):
     place = db.Column(db.String(), nullable=False)
     location = db.Column(db.String())
     max_capacity = db.Column(db.Integer, nullable=False)
-    fare2D=db.Column(db.Integer, nullable=False)
-    fare3D=db.Column(db.Integer, nullable=False)
-    venueShows = db.relationship("Show", backref="venues", secondary="show_venue")
+    fare2D = db.Column(db.Integer, nullable=False)
+    fare3D = db.Column(db.Integer, nullable=False)
+    venueShows = db.relationship("Show",
+                                 backref="venues",
+                                 secondary="show_venue")
 
 
 class Show(db.Model):
     show_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     show_name = db.Column(db.String(), unique=True, nullable=False)
     min_fare = db.Column(db.Integer, nullable=False)
-    is3d= db.Column(db.Boolean, nullable=False)
+    is3d = db.Column(db.Boolean, nullable=False)
     tags = db.relationship("Showtag", backref="shows")
-
 
 
 class ShowVenue(db.Model):
@@ -53,7 +54,9 @@ class Users(db.Model):
     mybookings = db.relationship("ShowVenue",
                                  backref="bookedUser",
                                  secondary="booking_details")
-    myratings = db.relationship("Show", backref="shoRatings", secondary="rating")
+    myratings = db.relationship("Show",
+                                backref="shoRatings",
+                                secondary="rating")
 
 
 class Admin(db.Model):
