@@ -1,21 +1,29 @@
 from flask import Flask, redirect, render_template, request, url_for
 from models.module import *
 from flask import current_app as app
+from datetime import datetime, timedelta
 
 
 @app.route("/user/<int:userID>/bookings", methods={"GET", "POST"})
 def myBookings(userID):
     currentUser = Users.query.get(userID)
+    userBooking = BookingDetails.query.filter_by(user_id=userID)
+    print(userBooking)
     final = []
-    for eachShowVenue in currentUser.mybookings:
-        currentShow = Show.query.get(eachShowVenue.show_id)
-        currentVenue = Venue.query.get(eachShowVenue.venue_id)
+    for eachBooking in userBooking:
+        currentShowVenue = ShowVenue.query.get(eachBooking.sv_id)
+        currentShow = Show.query.get(currentShowVenue.show_id)
+        currentVenue = Venue.query.get(currentShowVenue.venue_id)
         json = {}
         json['venue_name'] = currentVenue.venue_name
         json['show_id'] = currentShow.show_id
+        json['bookingID'] = eachBooking.booking_id  # having issue need a fix
         json['show_name'] = currentShow.show_name
-        json['time'] = eachShowVenue.time
+        json['time'] = currentShowVenue.time
+        json['showStatus'] = 'completed' if currentShowVenue.time + timedelta(
+            minutes=currentShow.duration) <= datetime.now() else 'notCompleted'
         final.append(json)
+        print(final)
     return render_template('allBooking.html', userId=userID, bookings=final)
 
 
@@ -42,11 +50,11 @@ def bookTicket(userID, svId):
         else:
             soldTick[each.sv_id] = each.ticket_count
     availabelTicket = currentVenue.max_capacity - soldTick[
-        currentVenueShow.sv_id] if currentVenueShow.sv_id in soldTick else currentVenue.max_capacity
+        currentVenueShow.
+        sv_id] if currentVenueShow.sv_id in soldTick else currentVenue.max_capacity
     return render_template('bookingPage.html',
                            userId=userID,
                            show=currentShow,
                            venue=currentVenue,
                            currentVenueShow=currentVenueShow,
                            availabelTicket=availabelTicket)
-

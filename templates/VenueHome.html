@@ -51,17 +51,17 @@
 
 <body>
     <div style="text-align: right;">
-        <a href="/admin/{{adminID}}/venue">Venue</a>
-        <a href="/admin/{{adminID}}/show">Show</a>
+        <a href="/admin/{{adminId}}/home">Home</a>
+        <a href="/admin/{{adminId}}/profile">Profile</a>
+        <a href="/admin/{{adminId}}/show">Show</a>
         <a href="/admin/login">Log out</a>
-
     </div>
     {% if error=="NotDelete" %}
     <p style="color:red;">There is Still some show allocated to this Venue. Please delete allocation from Venue before
         Deleting this Venue</p>
     {% endif%}
     <div style="margin-left: 1%;" class="container">
-        <a href="/admin/{{adminID}}/venue/create">Create New Venue</a>
+        <a href="/admin/{{adminId}}/venue/create">Create New Venue</a>
         {%for each in allVenue%}
 
         <div>
@@ -72,8 +72,8 @@
             <label>Price 3D:{{each.fare3D}}</label><br>
             <label>Price 2D:{{each.fare2D}}</label><br>
 
-            <a href="/admin/{{adminID}}/venue/{{each.venue_id}}/edit">Edit</a>
-            <a href="/admin/{{adminID}}/venue/{{each.venue_id}}/delete">Delete</a>
+            <a href="/admin/{{adminId}}/venue/{{each.venue_id}}/edit">Edit</a>
+            <a href="/admin/{{adminId}}/venue/{{each.venue_id}}/delete">Delete</a>
 
         </div>
         {%endfor%}

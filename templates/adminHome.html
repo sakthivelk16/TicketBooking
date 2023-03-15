@@ -8,52 +8,19 @@
         integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
-        * {
-            box-sizing: border-box;
-        }
 
-        /* Style the search field */
-        form.example input[type=text] {
-            padding: 10px;
-            font-size: 17px;
-            border: 1px solid grey;
-            float: left;
-            width: 80%;
-            background: #f1f1f1;
-        }
-
-        /* Style the submit button */
-        form.example button {
-            float: left;
-            width: 20%;
-            padding: 10px;
-            background: #2196F3;
-            color: white;
-            font-size: 17px;
-            border: 1px solid grey;
-            border-left: none;
-            /* Prevent double borders */
-            cursor: pointer;
-        }
-
-        form.example button:hover {
-            background: #0b7dda;
-        }
-
-        /* Clear floats */
-        form.example::after {
-            content: "";
-            clear: both;
-            display: table;
-        }
     </style>
 </head>
 
 <body>
     <div style="text-align: right;">
+       
         <a href="/admin/{{adminId}}/venue">Venue</a>
+        <a href="/admin/{{adminId}}/profile">Profile</a>
         <a href="/admin/{{adminId}}/show">Show</a>
         <a href="/admin/login">Log out</a>
+    </div>
+    <div>
         {%if error == 'show'%}
         <p style="color:red;"> This Show is still running in one or few venue. Please delete the show from venue before
             deleting the complete show</p>
@@ -67,21 +34,21 @@
         <a href="/admin/{{adminId}}/venue/{{each.venue_id}}/allocate" name="add" class="btn btn-secondary">Add New
             Show</a>
 
-            {%for each1 in each.shows%}
+        {%for each1 in each.shows%}
 
-            <div>
-                <label>{{each1.show_name}}</label><br>
-                <label>{{each1.time}}</label><br>
+        <div>
+            <label>{{each1.show_name}}</label><br>
+            <label>{{each1.time}}</label><br>
 
 
-                <a name="edit" href="/admin/{{adminId}}/edit/{{svid}}">Edit</a>
-                <a name="delete" href="/admin/{{adminId}}/delete/{{svid}}">Delete</a>
+            <a name="edit" href="/admin/{{adminId}}/edit/{{each1.sv_id}}">Edit</a>
+            <a name="delete" href="/admin/{{adminId}}/delete/{{each1.sv_id}}">Delete</a>
 
-            </div>
-            {%endfor%}
+        </div>
+        {%endfor%}
 
-            {%endfor%}
-            <hr>
+        {%endfor%}
+        <hr>
     </div>
     <hr>
 </body>

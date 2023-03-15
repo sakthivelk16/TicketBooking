@@ -14,8 +14,15 @@
 </head>
 
 <body>
-    {% if name==None%}
-    <h1 style="text-align:center">Create New Show</h1>
+    <div style="text-align: right;">
+        <a href="/admin/{{adminId}}/home">Home</a>
+        <a href="/admin/{{adminId}}/venue">Venue</a>
+        <a href="/admin/{{adminId}}/profile">Profile</a>
+        <a href="/admin/{{adminId}}/show">Show</a>
+        <a href="/admin/login">Log out</a>
+    </div>
+    {% if not show.name%}
+    <h1 style="text-align: center">Create New Show</h1>
     {%else%}
     <h1 style="text-align:center">Edit Show</h1>
     {% endif%}
@@ -26,22 +33,22 @@
     <form method="POST" id="createShow">
         <div class="mb-3">
             <label for="showName" class="form-label">Show Name</label>
-            <input type="text" class="form-control" name="showName" required value="{{name}}">
+            <input type="text" class="form-control" name="showName" required value="{{show.name}}">
 
             <label for="tags" class="form-label">Tags</label>
-            <input type="text" class="form-control" name="tags" required value="{{tags}}"
+            <input type="text" class="form-control" name="tags" required value="{{show.tags}}"
                 placeholder="In case of multiple tags. Add tags with semicolon">
-            <label for="duration" class="form-label">Duration</label>
-            <input type="number" class="form-control" name="duration" required value="{{duration}}">
+            <label for="duration" class="form-label">Duration (in mins)</label>
+            <input type="number" min="30" placeholder="duration must between 29 and 201" max="200" class="form-control" name="duration" required value="{{show.duration}}">
             <label for="price" class="form-label">Price</label>
-            <input type="number" class="form-control" name="price" required value="{{price}}">
-            <input type="checkbox" name="is3D" id="is3D" {{"checked" if is3d}}>
+            <input type="number" class="form-control" name="price" required value="{{show.price}}">
+            <input type="checkbox" name="is3D" id="is3D" {{"checked" if show.is3d}}>
             <label for="is3D" class="form-label" >3D</label>
 
 
 
         </div>
-        {% if name==None%}
+        {% if not show.name%}
         <button type="submit" class="btn btn-primary">Create New Show</button>
         {%else%}
         <button type="submit" class="btn btn-primary">Edit Show</button>

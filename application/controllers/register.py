@@ -50,15 +50,29 @@ def adminRegister():
         email = request.form["email"]
         username = request.form["username"]
         password = request.form["password"]
+        adminCode = request.form["code"]
+        isCodeExist = Admincode.query.filter_by(admin_code=adminCode).all()
+        if len(isCodeExist)==0:
+            return render_template(
+                "userRegistration/adminRegistration.html",
+                exist="InvalidCode",
+                fname=fname,
+                lname=lname,
+                mobile=mobile,
+                email=email,
+                username=username
+            )
+        db.session.delete(isCodeExist[0])
+        db.session.commit()
         isexist = Admin.query.filter_by(username=username).all()
         if len(isexist) > 0:  # verify user name exist in login table
             return render_template(
                 "userRegistration/adminRegistration.html",
                 exist="True",
-                first_name=fname,
-                last_name=lname,
-                phone_number=mobile,
-                email_id=email,
+                fname=fname,
+                lname=lname,
+                mobile=mobile,
+                email=email,
             )
         u1 = Admin(
             first_name=fname,

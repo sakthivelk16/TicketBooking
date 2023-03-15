@@ -20,6 +20,7 @@ class Show(db.Model):
     show_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     show_name = db.Column(db.String(), unique=True, nullable=False)
     min_fare = db.Column(db.Integer, nullable=False)
+    duration = db.Column(db.Integer, nullable=False)
     is3d = db.Column(db.Boolean, nullable=False)
     tags = db.relationship("Showtag", backref="shows")
 
@@ -57,6 +58,11 @@ class Users(db.Model):
     myratings = db.relationship("Show",
                                 backref="shoRatings",
                                 secondary="rating")
+
+
+class Admincode(db.Model):
+    admin_code_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    admin_code = db.Column(db.String(), unique=True, nullable=False)
 
 
 class Admin(db.Model):

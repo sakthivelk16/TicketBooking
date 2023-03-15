@@ -12,7 +12,7 @@ def showCreate(a_id):
         name = request.form['showName']
         show1 = Show.query.filter_by(show_name=name).first()
         if show1 is not None:
-            return render_template("createShow.html", error=True)
+            return render_template("createShow.html", adminId=a_id, error=True)
         tags = request.form['tags']
         duration = request.form['duration']
         price = request.form['price']
@@ -20,7 +20,7 @@ def showCreate(a_id):
 
         if 'is3D' in request.form:
             is3D = True
-        s1 = Show(show_name=name, min_fare=price, is3d=is3D)
+        s1 = Show(show_name=name, min_fare=price, is3d=is3D, duration=duration)
         db.session.add(s1)
         db.session.commit()
         show1 = Show.query.filter_by(show_name=name, min_fare=price,
@@ -30,8 +30,8 @@ def showCreate(a_id):
             db.session.add(st1)
             db.session.commit()
         return redirect("/admin/" + str(a_id) + "/show")
-
-    return render_template("createShow.html")
+    show = {}
+    return render_template("createShow.html", adminId=a_id, show=show)
 
 
 @app.route("/admin/<int:a_id>/show", methods={"GET", "POST"})
@@ -55,7 +55,7 @@ def showHome(a_id):
 
     return render_template("showAdmin.html",
                            allShow=finalShow,
-                           adminID=a_id,
+                           adminId=a_id,
                            error=error)
 
 
@@ -82,36 +82,36 @@ def deleteShow(a_id, showId):
 def editShow(a_id, showId):
     if request.method == "POST":
         print(request.form)
-        name = request.form['showName']
-
-        tags = request.form['tags']
-        duration = request.form['duration']
-        price = request.form['price']
-        is3D = False
+        showjson = {}
+        showjson['name'] = request.form['showName']
+        showjson['tags'] = request.form['tags']
+        showjson['duration'] = request.form['duration']
+        showjson['price'] = request.form['price']
+        showjson['is3D'] = False
 
         if 'is3D' in request.form:
-            is3D = True
-        show1 = Show.query.filter_by(show_name=name).all()
+            showjson['is3D'] = True
+        show1 = Show.query.filter_by(show_name=showjson['name']).all()
         for each in show1:
             if each.show_id != showId:
-                return render_template("createShow.html",
-                                       error=True,
-                                       duration=duration,
-                                       name=name,
-                                       tags=tags,
-                                       price=price,
-                                       is3d=is3D)
+                return render_template(
+                    "createShow.html",
+                    error=True,
+                    adminId=a_id,
+                    show=showjson,
+                )
         s1 = Show.query.get(showId)
-        s1.show_name = name
-        s1.min_fare = price
-        s1.is3d = is3D
+        s1.show_name = showjson['name']
+        s1.min_fare = showjson['price']
+        s1.duration = showjson['duration']
+        s1.is3d = showjson['is3D']
         db.session.add(s1)
         db.session.commit()
         st = Showtag.query.filter_by(show_id=showId)
         for each in st:
             db.session.delete(each)
             db.session.commit()
-        for each in tags.split(';'):
+        for each in showjson['tags'].split(';'):
             st1 = Showtag(show_id=showId, tags=each)
             db.session.add(st1)
             db.session.commit()
@@ -121,8 +121,10 @@ def editShow(a_id, showId):
     a = ''
     for each in alltags:
         a = a + each.tags + ';'
-    return render_template("createShow.html",
-                           name=currentShow.show_name,
-                           tags=a[:-1],
-                           price=currentShow.min_fare,
-                           is3d=currentShow.is3d)
+    showjson = {}
+    showjson['name'] = currentShow.show_name
+    showjson['tags'] = a[:-1]
+    showjson['duration'] = currentShow.duration
+    showjson['price'] = currentShow.min_fare
+    showjson['is3D'] = currentShow.is3d
+    return render_template("createShow.html", adminId=a_id, show=showjson)

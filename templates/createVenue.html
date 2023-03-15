@@ -15,6 +15,13 @@
 </head>
 
 <body>
+    <div style="text-align: right;">
+        <a href="/admin/{{adminId}}/home">Home</a>
+        <a href="/admin/{{adminId}}/venue">Venue</a>
+        <a href="/admin/{{adminId}}/profile">Profile</a>
+        <a href="/admin/{{adminId}}/show">Show</a>
+        <a href="/admin/login">Log out</a>
+    </div>
     {% if not venue.venue_name%}
     <h1 style="text-align:center">Create New Venue</h1>
     {%else%}

@@ -23,8 +23,8 @@ def venueCreate(a_id):
         db.session.add(v1)
         db.session.commit()
         return redirect("/admin/" + str(a_id) + "/venue")
-    venue={}
-    return render_template("createVenue.html",venue=venue)
+    venue = {}
+    return render_template("createVenue.html", adminId=a_id, venue=venue)
 
 
 @app.route("/admin/<int:a_id>/venue", methods={"GET", "POST"})
@@ -34,7 +34,7 @@ def venueHome(a_id):
     allVenue = Venue.query.all()
     return render_template("venueHome.html",
                            allVenue=allVenue,
-                           adminID=a_id,
+                           adminId=a_id,
                            error=error)
 
 
@@ -68,6 +68,7 @@ def editVenue(a_id, venueId):
                 return render_template(
                     "createVenue.html",
                     error=True,
+                    adminId=a_id,
                     venue=request.form,
                 )
         v1 = Venue.query.get(venueId)
@@ -82,4 +83,6 @@ def editVenue(a_id, venueId):
         return redirect("/admin/" + str(a_id) + "/venue")
     currentVenue = Venue.query.get(venueId)
 
-    return render_template("createVenue.html", venue=currentVenue)
+    return render_template("createVenue.html",
+                           adminId=a_id,
+                           venue=currentVenue)
