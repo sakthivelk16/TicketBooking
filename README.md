@@ -3,8 +3,8 @@
 ## User View
 
 ### Search
-User can search using 5 differnt kind
-User can search using 5 differnt kind
+User can search using 5 different parameter as follows
+
 - Search by Venue Name
 - Search by Venue Location
 - Search by Show Name
