@@ -4,7 +4,7 @@
 
 ### Search
 User can search using 5 differnt kind
-Markup: * Search by Venue Name
+Markup : * Search by Venue Name
         * Search by Venue Location
         * Search by Show Name
         * Search by Show Tags
