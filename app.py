@@ -54,7 +54,7 @@ def GenerateCode(userId):
     ac1 = Admincode(admin_code=res)
     db.session.add(ac1)
     db.session.commit()
-    print("The generated random string : " + str(res))
+    # print("The generated random string : " + str(res))
     return render_template('adminCode.html', code=str(res))
 
 
@@ -72,7 +72,23 @@ def userHome(userID):
             soldTick[each.sv_id] = soldTick[each.sv_id] + each.ticket_count
         else:
             soldTick[each.sv_id] = each.ticket_count
-    print(soldTick)
+    # print(soldTick)
+    avgRatings = db.session.query(Rating.show_id,
+                                  label('members',
+                                        func.avg(Rating.rating))).group_by(
+                                            Rating.show_id).all()
+    allRatings = {}
+    for each in avgRatings:
+        allRatings[each[0]] = each[1]
+
+    tags = Showtag.query.all()
+    allTags = {}
+    for each in tags:
+        if each.show_id in allTags:
+            allTags[each.show_id] = allTags[each.show_id] + ';' + each.tags
+        else:
+            allTags[each.show_id] = each.tags
+
     list = []
     currentTime = datetime.now()
     for e in v:
@@ -108,13 +124,25 @@ def userHome(userID):
                 innerjson["show_id"] = currentShow.show_id
                 innerjson["show_name"] = currentShow.show_name
                 innerjson["is3d"] = currentShow.is3d
+                innerjson["tag"] = allTags[
+                    currentShow.
+                    show_id] if currentShow.show_id in allTags else 'No Tags'
+                innerjson['rating'] = allRatings[
+                    currentShow.
+                    show_id] if currentShow.show_id in allRatings else 'Not Rated'
                 innerjson["available_ticket"] = e.max_capacity - soldTick[
                     ee.sv_id] if ee.sv_id in soldTick else e.max_capacity
-
-                innerjson["min_fare"] = currentShow.min_fare
+                if currentShow.is3d and currentShow.min_fare > e.fare3D:
+                    innerjson["min_fare"] = currentShow.min_fare
+                elif currentShow.is3d:
+                    innerjson["min_fare"] = e.fare3D
+                elif currentShow.min_fare > e.fare2D:
+                    innerjson["min_fare"] = currentShow.min_fare
+                else:
+                    innerjson["min_fare"] = e.fare2D
                 eachjson["shows"].append(innerjson)
             list.append(eachjson)
-    print(list)
+    # print(list)
     return render_template("showDetails.html", userId=userID, list=list)
 
 
@@ -163,6 +191,7 @@ from application.controllers.userBookings import *
 from application.controllers.venueAdmin import *
 from application.controllers.showAdmin import *
 from application.controllers.adminShowallocation import *
+from application.controllers.rate import *
 from application.controllers.search import *
 
 if __name__ == "__main__":

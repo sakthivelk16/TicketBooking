@@ -35,17 +35,23 @@
             <tr>
                 <th scope="col">Venue name - Show Name</th>
                 <th scope="col">Show Timing</th>
-                <th scope="col">Actions</th>
+                <th scope="col">Rate</th>
+                <th scope="col">Details</th>
             </tr>
             {%for each in bookings%}
             <tr>
                 <td>{{each.venue_name}}-{{each.show_name}}</td>
                 <td>{{each.time}}</td>
                 <td>
-                    {%if each.showStatus=='completed'%}
+                    {%if each.rated!='notRated'%}
+                    <label>You already rated {{each.rated}}/5 for this show</label>
+                    {%elif each.showStatus=='completed'%}
                     <a href="/user/{{userId}}/rate/{{each.show_id}}" name="rate">Rate</a>
-                   
+                    {%else%}
+                    <label>You can rate for this show when it completed</label>
                     {%endif%}
+                </td>
+                <td>
                     <a href="/user/{{userId}}/details/{{each.bookingID}}" name="details">Details</a>
                 </td>
             </tr>

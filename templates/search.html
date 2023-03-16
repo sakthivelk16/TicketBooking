@@ -9,7 +9,9 @@
         <a href="/">Log out</a>
     </div>
     <h1>Search</h1>
-
+    {%if error%}
+    <p style="color: red;">{{error}}</p>
+    {%endif%}
     <form method="post" id="searchVenue">
         <label for="venueSearch">Search by Venue:</label><br>
         <input type="radio" name="venue" value="1" required>search Should match Exact word</input><br>
@@ -19,6 +21,7 @@
         <input type="search" id="venueSearch" name="venueSearch" required>
         <input type="submit">
     </form>
+
     <hr>
     <form method="post" id="searchShow">
         <label for="showSearch">Search by show:</label><br>
@@ -40,12 +43,18 @@
     <hr>
     <form method="post" id="searchTag">
         <label for="tagSearch">Search by ratings:</label>
-        <select  id="ratingSearch" name="ratingSearch" required> 
+        <select id="ratingSearch" name="ratingSearch" required>
             <option value="1">1 and above</option>
             <option value="2">2 and above</option>
             <option value="3">3 and above</option>
             <option value="4">4 and above</option>
         </select>
+        <input type="submit">
+    </form>
+    <hr>
+    <form method="post" id="searchLocation">
+        <label for="venueSearch">Search by Location(Should match Exact word):</label>
+        <input type="search" id="LocationSearch" name="LocationSearch" required>
         <input type="submit">
     </form>
 </body>

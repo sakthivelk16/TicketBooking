@@ -1,4 +1,5 @@
 from flask import Flask, redirect, render_template, request, url_for
+from sqlalchemy import func, label
 from models.module import *
 from flask import current_app as app
 from datetime import datetime, timedelta
@@ -14,6 +15,9 @@ def myBookings(userID):
         currentShowVenue = ShowVenue.query.get(eachBooking.sv_id)
         currentShow = Show.query.get(currentShowVenue.show_id)
         currentVenue = Venue.query.get(currentShowVenue.venue_id)
+        rate1 = Rating.query.filter_by(user_id=userID,
+                                       show_id=currentShow.show_id).all()
+
         json = {}
         json['venue_name'] = currentVenue.venue_name
         json['show_id'] = currentShow.show_id
@@ -23,6 +27,7 @@ def myBookings(userID):
         json['showStatus'] = 'completed' if currentShowVenue.time + timedelta(
             minutes=currentShow.duration) <= datetime.now() else 'notCompleted'
         final.append(json)
+        json['rated'] = rate1[0].rating if len(rate1) > 0 else 'notRated'
         print(final)
     return render_template('allBooking.html', userId=userID, bookings=final)
 
@@ -44,6 +49,23 @@ def bookTicket(userID, svId):
         venue_id=currentVenueShow.venue_id).first()
     allBookings = BookingDetails.query.all()
     soldTick = {}
+    avgRatings = db.session.query(Rating.show_id,
+                                  label('members',
+                                        func.avg(Rating.rating))).group_by(
+                                            Rating.show_id).all()
+
+    tags = Showtag.query.filter_by(show_id=currentShow.show_id).all()
+    if len(tags)==0:
+        tag='No tags'
+    else:
+        tag=''
+        for each in tags:
+            tag = tag + ';' + each.tags
+        tag=tag[1:]
+    print(tag)
+    allRatings = {}
+    for each in avgRatings:
+        allRatings[each[0]] = each[1]
     for each in allBookings:
         if each.sv_id in soldTick:
             soldTick[each.sv_id] = soldTick[each.sv_id] + each.ticket_count
@@ -52,9 +74,23 @@ def bookTicket(userID, svId):
     availabelTicket = currentVenue.max_capacity - soldTick[
         currentVenueShow.
         sv_id] if currentVenueShow.sv_id in soldTick else currentVenue.max_capacity
+    if currentShow.is3d and currentShow.min_fare > currentVenue.fare3D:
+        fare = currentShow.min_fare
+    elif currentShow.is3d:
+        fare = currentVenue.fare3D
+    elif currentShow.min_fare > currentVenue.fare2D:
+        fare = currentShow.min_fare
+    else:
+        fare = currentVenue.fare2D
+    rate = allRatings[
+        currentShow.
+        show_id] if currentShow.show_id in allRatings else 'Not rated'
     return render_template('bookingPage.html',
                            userId=userID,
                            show=currentShow,
                            venue=currentVenue,
+                           fare=fare,
                            currentVenueShow=currentVenueShow,
+                           rate=rate,
+                           tags=tag,
                            availabelTicket=availabelTicket)

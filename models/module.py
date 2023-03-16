@@ -95,19 +95,3 @@ class BookingDetails(db.Model):
                       db.ForeignKey("show_venue.sv_id"),
                       nullable=False)
     ticket_count = db.Column(db.Integer, nullable=False)
-
-
-# db.create_all()
-
-# d1=Director(name="direct1")
-# db.session.add(d1)
-# db.session.commit()
-# d2=Director(name="direct2")
-# m1=Movie(name="movie1")
-# db.session.add_all([m1,d2])
-# db.session.commit()
-
-# Director.query.all() # return complete table
-# Director.query.get(1) # return data which have id(primarykey) 1
-# Director.query.filter_by(name="Director2").first() # return as element-> first data with filter details
-# Director.query.filter_by(name="Director2").all() # return as list-> all data with filter details

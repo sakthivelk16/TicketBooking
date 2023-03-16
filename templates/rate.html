@@ -14,29 +14,39 @@
 
 <body>
     <div style="text-align: right;">
+
         <a href="/user/{{userId}}/home">Home</a>
+
         <a href="/user/{{userId}}/search">Search</a>
         <a href="/user/{{userId}}/bookings">Booking</a>
         <a href="/user/{{userId}}/profile">Profile</a>
         <a href="/">Log out</a>
 
     </div>
-    <div style="margin-left: 1%;" class="container">
-        <form method="POST" id="bookDetails">
-            <label>Show:{{show.show_name}}</label><br>
-            <label>rating</label>
 
-            <select name="rating">
+
+    <div style="margin-left: 1%;" class="container">
+
+
+        <form method="POST" id="ShowDetails">
+            <label>Show: {{show.showName}}</label><br>
+
+            <label>Movie Type: {{show.movieType}}</label><br>
+
+            <label>select rating:</label>
+            <select name="ratevalue" id="ratevalue">
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
                 <option value="4">4</option>
                 <option value="5">5</option>
-            </select>
-            <br>
-            <button type="submit">Submit</button>
+            </select><br>
+            <button type="submit" name="rate" value="rate" class="btn btn-primary">Rate</button>
+
         </form>
+
     </div>
+    <hr>
 </body>
 
 </html>

@@ -14,16 +14,17 @@
 
 <body>
     <div style="text-align: right;">
+        {%if search=='searchpage'%}
+        <a href="/user/{{userId}}/home">Home</a>
+        {%endif%}
         <a href="/user/{{userId}}/search">Search</a>
         <a href="/user/{{userId}}/bookings">Booking</a>
         <a href="/user/{{userId}}/profile">Profile</a>
         <a href="/">Log out</a>
 
     </div>
-    <form class="example" style="margin:auto;max-width:300px">
-        <input type="text" placeholder="Search any Venue or Show " name="search">
-        <button type="submit"><i class="fa fa-search"></i></button>
-    </form>
+
+
     <div style="margin-left: 1%;" class="container">
         {% for venue in list%}
         <h3>{{venue.venue_name}}</h3>
@@ -40,8 +41,10 @@
                 <label>Movie Type:2D</label><br>
 
                 <label>Show Price:{{[venue.price2D, show.min_fare]|max}}</label><br>
+               
                 {%endif%}
-
+                <label>Rating: {{show.rating}}</label><br> 
+                <label>Tags: {{show.tag}}</label><br>
                 {%if show.available_ticket==0%}
                 <button type="submit" disabled>Houseful</button>
 
