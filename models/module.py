@@ -6,8 +6,8 @@ db = SQLAlchemy()
 class Venue(db.Model):
     venue_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     venue_name = db.Column(db.String(), nullable=False)
-    place = db.Column(db.String(), nullable=False)
-    location = db.Column(db.String())
+    place = db.Column(db.String())
+    location = db.Column(db.String(), nullable=False)
     max_capacity = db.Column(db.Integer, nullable=False)
     fare2D = db.Column(db.Integer, nullable=False)
     fare3D = db.Column(db.Integer, nullable=False)
@@ -33,7 +33,7 @@ class ShowVenue(db.Model):
     venue_id = db.Column(db.Integer,
                          db.ForeignKey("venue.venue_id"),
                          nullable=False)
-    time = db.Column(db.DateTime)
+    time = db.Column(db.DateTime, nullable=False)
 
 
 class Showtag(db.Model):
@@ -95,3 +95,4 @@ class BookingDetails(db.Model):
                       db.ForeignKey("show_venue.sv_id"),
                       nullable=False)
     ticket_count = db.Column(db.Integer, nullable=False)
+    ticket_fare = db.Column(db.Integer, nullable=False)

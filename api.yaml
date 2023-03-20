@@ -1,0 +1,880 @@
+openapi: 3.0.0
+info:
+  title: Ticket Booking Application
+  description: |
+    <h3> Error Codes </h3>  <table>
+      <thead>
+        <th>Resource</th>
+        <th>Error Code</th>
+        <th>Message</th>
+      </thead>
+      <tbody>
+      <tr>
+        <td>Venue</td>
+        <td>VENUE001</td>
+        <td>Venue name is required</td>
+      </tr>
+      <tr>
+        <td>Venue</td>
+        <td>VENUE002</td>
+        <td>location is required</td>
+      </tr>
+      <tr>
+        <td>Venue</td>
+        <td>VENUE003</td>
+        <td>max_capacity is required</td>
+      </tr>
+      <tr>
+        <td>Venue</td>
+        <td>VENUE004</td>
+        <td>fare2D is required</td>
+      </tr>
+      <tr>
+        <td>Venue</td>
+        <td>VENUE005</td>
+        <td>fare3D is required</td>
+      </tr>
+      <tr>
+        <td>Venue</td>
+        <td>VENUE006</td>
+        <td>max_capacity should be integer</td>
+      </tr>
+      <tr>
+        <td>Venue</td>
+        <td>VENUE007</td>
+        <td>max_capacity should be greater than 0</td>
+      </tr>
+      <tr>
+        <td>Venue</td>
+        <td>VENUE008</td>
+        <td>2D Fare should be integer</td>
+      </tr>
+      <tr>
+        <td>Venue</td>
+        <td>VENUE009</td>
+        <td>fare2D should be greater than 0</td>
+      </tr>
+      <tr>
+        <td>Venue</td>
+        <td>VENUE010</td>
+        <td>3D Fare should be integer</td>
+      </tr>
+      <tr>
+        <td>Venue</td>
+        <td>VENUE011</td>
+        <td>fare3D should be greater than 0</td>
+      </tr>
+      <tr>
+        <td>Show</td>
+        <td>SHOW001</td>
+        <td>Show name is required</td>
+      </tr>
+      <tr>
+        <td>Show</td>
+        <td>SHOW002</td>
+        <td>minimum Fare is required</td>
+      </tr>
+      <tr>
+        <td>Show</td>
+        <td>SHOW003</td>
+        <td>duration is required</td>
+      </tr>
+      <tr>
+        <td>Show</td>
+        <td>SHOW004</td>
+        <td>is3D is required</td>
+      </tr>
+      <tr>
+        <td>Show</td>
+        <td>SHOW005</td>
+        <td>tags is required</td>
+      </tr>
+      <tr>
+        <td>Show</td>
+        <td>SHOW006</td>
+        <td>minimum Fare should be integer</td>
+      </tr>
+      <tr>
+        <td>Show</td>
+        <td>SHOW007</td>
+        <td>minimum Fare should be greater than 0</td>
+      </tr>
+      <tr>
+        <td>Show</td>
+        <td>SHOW008</td>
+        <td>duration should be integer</td>
+      </tr>
+      <tr>
+        <td>Show</td>
+        <td>SHOW009</td>
+        <td>duration should be greater than 0</td>
+      </tr>
+      <tr>
+        <td>Show</td>
+        <td>SHOW010</td>
+        <td>is3d eithier true or false in lowercase as boolean</td>
+      </tr>
+      <tr>
+        <td>Allocation</td>
+        <td>ALLOC001</td>
+        <td>time is required</td>
+      </tr>
+      <tr>
+        <td>Allocation</td>
+        <td>ALLOC002</td>
+        <td>Either given time is invalid time or it is Wrong Format. <br>It should be of format YYYY-MM-DD HH:MM</td>
+      </tr>
+       <tr>
+        <td>Allocation</td>
+        <td>ALLOC003</td>
+        <td>Venue name and location should be come as combination</td>
+      </tr>
+       <tr>
+        <td>Allocation</td>
+        <td>ALLOC004</td>
+        <td>Show name not Found</td>
+      </tr>
+       <tr>
+        <td>Allocation</td>
+        <td>ALLOC005</td>
+        <td>Venue name and venue location combination not found</td>
+      </tr>
+       </tr>
+       <tr>
+        <td>Allocation</td>
+        <td>ALLOC006</td>
+        <td>Allocation can be done from current time + 15 mins</td>
+      </tr>
+       </tr>
+       <tr>
+        <td>Allocation</td>
+        <td>ALLOC007</td>
+        <td>There is some other show blocking this time.<br> Please choose differnt time</td>
+      </tr>
+
+      
+    </tbody> </table>
+  version: 1.0.0
+servers:
+  - url: http://127.0.0.1:5000/
+paths:
+  /api/venue/{venue_id}:
+    description: >-
+      End point to read, update and delete a Venue detaila with venue_id =
+      venueId.
+    get:
+      description: Operation to Read venue details.
+      parameters:
+        - in: path
+          name: venue_id
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        "200":
+          description: Request Successful
+          content:
+            application/json:
+              schema:
+                title: venue object
+                type: object
+                properties:
+                  venue_id:
+                    type: integer
+                    example: 3
+                  venue_name:
+                    type: string
+                    example: Sangeetha
+                  place:
+                    type: string
+                    example: Somanur
+                  location:
+                    type: string
+                    example: Coimbatore
+                  max_capacity:
+                    type: integer
+                    example: 80
+                  fare2D:
+                    type: integer
+                    example: 120
+                  fare3D:
+                    type: integer
+                    example: 150
+        "404":
+          description: Venue not found
+        "500":
+          description: Internal Server Error
+    put:
+      description: Operation to update the Venue details.
+      parameters:
+        - in: path
+          name: venue_id
+          required: true
+          schema:
+            type: integer
+            example: 201
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                venue_name:
+                  type: string
+                  example: Sangeetha
+                place:
+                  type: string
+                  example: Somanur
+                location:
+                  type: string
+                  example: Coimbatore
+                max_capacity:
+                  type: integer
+                  example: 80
+                fare2D:
+                  type: integer
+                  example: 120
+                fare3D:
+                  type: integer
+                  example: 150
+      responses:
+        "200":
+          description: Successfuly updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  venue_id:
+                    type: integer
+                    example: 3
+                  venue_name:
+                    type: string
+                    example: Sangeetha
+                  place:
+                    type: string
+                    example: Somanur
+                  location:
+                    type: string
+                    example: Coimbatore
+                  max_capacity:
+                    type: integer
+                    example: 80
+                  fare2D:
+                    type: integer
+                    example: 120
+                  fare3D:
+                    type: integer
+                    example: 150
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                  error_message:
+                    type: string
+        "404":
+          description: Venue not found
+        "500":
+          description: Internal Server Error
+    delete:
+      description: Operation to delete the venue
+      parameters:
+        - in: path
+          name: venue_id
+          required: true
+          schema:
+            type: integer
+            example: 201
+      responses:
+        "200":
+          description: Successfully Deleted
+        "307":
+          description: There is still allocation in Venue
+        "404":
+          description: Venue not found
+        "500":
+          description: Intenal Server Error
+  /api/venue:
+    description: End point to create venue
+    post:
+      description: Operation to create the venue
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                venue_name:
+                  type: string
+                  example: Sangeetha
+                place:
+                  type: string
+                  example: Somanur
+                location:
+                  type: string
+                  example: Coimbatore
+                max_capacity:
+                  type: integer
+                  example: 80
+                fare2D:
+                  type: integer
+                  example: 120
+                fare3D:
+                  type: integer
+                  example: 150
+      responses:
+        "201":
+          description: Successfully Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  venue_id:
+                    type: integer
+                    example: 3
+                  venue_name:
+                    type: string
+                    example: Sangeetha
+                  place:
+                    type: string
+                    example: Somanur
+                  location:
+                    type: string
+                    example: Coimbatore
+                  max_capacity:
+                    type: integer
+                    example: 80
+                  fare2D:
+                    type: integer
+                    example: 120
+                  fare3D:
+                    type: integer
+                    example: 150
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                  error_message:
+                    type: string
+        "409":
+          description: Venue already exist
+        "500":
+          description: Internal Server Error
+  /api/show/{show_id}:
+    description: Url to read, update and delete the Show details
+    get:
+      description: Operation to read Show details
+      parameters:
+        - in: path
+          name: show_id
+          required: true
+          schema:
+            type: integer
+            example: 5
+      responses:
+        "200":
+          description: Request Successful
+          content:
+            application/json:
+              schema:
+                title: show object
+                type: object
+                properties:
+                  show_id:
+                    type: integer
+                    example: 1
+                  show_name:
+                    type: string
+                    example: Mangatha
+                  min_fare:
+                    type: integer
+                    example: "80"
+                  duration:
+                    type: integer
+                    example: "200"
+                  is3d:
+                    type: string
+                    example: "true"
+                  tags:
+                    type: string
+                    example: comedy;action;thriller
+        "404":
+          description: Show not found
+        "500":
+          description: Internal server error
+    put:
+      description: Operation to update the show details
+      parameters:
+        - in: path
+          name: show_id
+          required: true
+          schema:
+            type: integer
+            example: 101
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                show_name:
+                  type: string
+                  example: Mangatha
+                min_fare:
+                  type: integer
+                  example: "80"
+                duration:
+                  type: integer
+                  example: "200"
+                is3d:
+                  type: string
+                  example: "true"
+                tags:
+                  type: string
+                  example: comedy;action;thriller
+      responses:
+        "200":
+          description: Successfully updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  show_id:
+                    type: integer
+                    example: 1
+                  show_name:
+                    type: string
+                    example: Mangatha
+                  min_fare:
+                    type: integer
+                    example: "80"
+                  duration:
+                    type: integer
+                    example: "200"
+                  is3d:
+                    type: string
+                    example: "true"
+                  tags:
+                    type: string
+                    example: comedy;action;thriller
+        "307":
+          description: There is still allocation in Venue
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                  error_message:
+                    type: string
+        "404":
+          description: Show not found
+        "500":
+          description: Internal Server Error
+    delete:
+      description: Operation to delete the Show details
+      parameters:
+        - in: path
+          name: show_id
+          required: true
+          schema:
+            type: integer
+            example: 101
+      responses:
+        "200":
+          description: Successfully Deleted
+        "307":
+          description: There is still allocation in Venue
+        "404":
+          description: Show not found
+        "500":
+          description: Internal Server Error
+  /api/show:
+    description: Url to create Show
+    post:
+      description: Operation to create the show
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                show_name:
+                  type: string
+                  example: Mangatha
+                min_fare:
+                  type: integer
+                  example: "80"
+                duration:
+                  type: integer
+                  example: "200"
+                is3d:
+                  type: string
+                  example: "true"
+                tags:
+                  type: string
+                  example: comedy;action;thriller
+      responses:
+        "201":
+          description: Successfully Created
+          content:
+            application/json:
+              schema:
+                title: show object
+                type: object
+                properties:
+                  show_id:
+                    type: integer
+                    example: 1
+                  show_name:
+                    type: string
+                    example: Mangatha
+                  min_fare:
+                    type: integer
+                    example: "80"
+                  duration:
+                    type: integer
+                    example: "200"
+                  is3d:
+                    type: string
+                    example: "true"
+                  tags:
+                    type: string
+                    example: comedy;action;thriller
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                  error_message:
+                    type: string
+        "409":
+          description: show already exist
+        "500":
+          description: Internal Server Error
+  /api/allocation/{alloc_id}:
+    description: Url to get the the list of allocation of show and Venue
+    get:
+      description: Url to get the the list of allocation of show and Venue
+      parameters:
+        - in: path
+          name: alloc_id
+          required: true
+          schema:
+            type: integer
+            example: 101
+      responses:
+        "200":
+          description: Request Successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  alloc_id:
+                    type: integer
+                    example: 19
+                  show_name:
+                    type: string
+                    example: Mangatha
+                  venue_name:
+                    type: string
+                    example: Sangeetha
+                  venue_location:
+                    type: string
+                    example: Coimbatore
+                  time:
+                    type: string
+                    example: 2023-09-09 23:59
+        "404":
+          description: InValid Aloocation Id
+        "500":
+          description: Internal Server Error
+    put:
+      description: Operation to update the alloc details
+      parameters:
+        - in: path
+          name: alloc_id
+          required: true
+          schema:
+            type: integer
+            example: 19
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                show_name:
+                  type: string
+                  example: Mangatha
+                venue_name:
+                  type: string
+                  example: Sangeetha
+                venue_location:
+                  type: string
+                  example: Coimbatore
+                time:
+                  type: string
+                  example: 2023-09-09 23:59
+      responses:
+        "200":
+          description: Successfully updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  alloc_id:
+                    type: integer
+                    example: 19
+                  show_name:
+                    type: string
+                    example: Mangatha
+                  venue_name:
+                    type: string
+                    example: Sangeetha
+                  venue_location:
+                    type: string
+                    example: Coimbatore
+                  time:
+                    type: string
+                    example: 2023-09-09 23:59
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                  error_message:
+                    type: string
+        "404":
+          description: Allocation not found
+        "500":
+          description: Internal Server Error
+    delete:
+      description: >-
+        URL to delete Allocation in ShowVenue table
+      parameters:
+        - in: path
+          name: alloc_id
+          required: true
+          schema:
+            type: integer
+            example: 101
+      responses:
+        "200":
+          description: Successfully deleted
+        "404":
+          description: Allocation id Not found
+        "500":
+          description: Internal Server Error
+  /api/allocation:
+    description: >-
+      URL to create new allocation between show and venue
+    post:
+      description: >-
+        To create new allocation between show and venue
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                show_name:
+                  type: string
+                  example: Mangatha
+                venue_name:
+                  type: string
+                  example: Sangeetha
+                venue_location:
+                  type: string
+                  example: Coimbatore
+                time:
+                  type: string
+                  example: 2023-09-09 23:59
+      responses:
+        "201":
+          description: Allocation creation successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  alloc_id:
+                    type: integer
+                    example: 19
+                  show_name:
+                    type: string
+                    example: Mangatha
+                  venue_name:
+                    type: string
+                    example: Sangeetha
+                  venue_location:
+                    type: string
+                    example: Coimbatore
+                  time:
+                    type: string
+                    example: 2023-09-09 23:59
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                  error_message:
+                    type: string
+        "500":
+          description: Internal Server Error
+  /api/venue/{venue_id}/show:
+    description: End point to read all show of current venue
+    get:
+      description: Operation to read all show of current venue
+      parameters:
+        - in: path
+          name: venue_id
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        "200":
+          description: Request Successful
+          content:
+            application/json:
+              schema:
+                title: venue object
+                type: array
+                items:
+                  properties:
+                    alloc_id:
+                      type: integer
+                      example: 3
+                    show_name:
+                      type: string
+                      example: Mangatha
+                    venue_name:
+                      type: string
+                      example: Sangeetha
+                    venue_location:
+                      type: string
+                      example: Coimbatore
+                    time:
+                      type: string
+                      example: 2023-09-09 23:45
+        "404":
+          description: Details not found
+        "500":
+          description: Internal Server Error
+  /api/venue/{venue_id}/show/{show_id}:
+    description: End point to read particular show in current venue
+    get:
+      description: Operation to read particular show in current venue
+      parameters:
+        - in: path
+          name: venue_id
+          required: true
+          schema:
+            type: integer
+            example: 1
+        - in: path
+          name: show_id
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        "200":
+          description: Request Successful
+          content:
+            application/json:
+              schema:
+                title: venue object
+                type: array
+                items:
+                  properties:
+                    alloc_id:
+                      type: integer
+                      example: 3
+                    show_name:
+                      type: string
+                      example: Mangatha
+                    venue_name:
+                      type: string
+                      example: Sangeetha
+                    venue_location:
+                      type: string
+                      example: Coimbatore
+                    time:
+                      type: string
+                      example: 2023-09-09 23:45
+        "404":
+          description: Details not found
+        "500":
+          description: Internal Server Error
+  /api/show/{show_id}/venue:
+    description: End point to read particular show in all venue
+    get:
+      description: Operation to read particular show in all venue
+      parameters:
+        - in: path
+          name: show_id
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        "200":
+          description: Request Successful
+          content:
+            application/json:
+              schema:
+                title: venue object
+                type: array
+                items:
+                  properties:
+                    alloc_id:
+                      type: integer
+                      example: 3
+                    show_name:
+                      type: string
+                      example: Mangatha
+                    venue_name:
+                      type: string
+                      example: Sangeetha
+                    venue_location:
+                      type: string
+                      example: Coimbatore
+                    time:
+                      type: string
+                      example: 2023-09-09 23:45
+        "404":
+          description: Details not found
+        "500":
+          description: Internal Server Error

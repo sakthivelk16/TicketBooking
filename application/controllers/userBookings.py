@@ -1,4 +1,4 @@
-from flask import Flask, redirect, render_template, request, url_for
+from flask import flash, redirect, render_template, request, url_for
 from sqlalchemy import func, label
 from models.module import *
 from flask import current_app as app
@@ -9,7 +9,6 @@ from datetime import datetime, timedelta
 def myBookings(userID):
     currentUser = Users.query.get(userID)
     userBooking = BookingDetails.query.filter_by(user_id=userID)
-    print(userBooking)
     final = []
     for eachBooking in userBooking:
         currentShowVenue = ShowVenue.query.get(eachBooking.sv_id)
@@ -28,20 +27,22 @@ def myBookings(userID):
             minutes=currentShow.duration) <= datetime.now() else 'notCompleted'
         final.append(json)
         json['rated'] = rate1[0].rating if len(rate1) > 0 else 'notRated'
-        print(final)
     return render_template('allBooking.html', userId=userID, bookings=final)
 
 
 @app.route("/user/<int:userID>/book/<int:svId>", methods={"GET", "POST"})
 def bookTicket(userID, svId):
     if request.method == "POST":
-        ticketCount = request.form['ticketCount']
         b1 = BookingDetails(user_id=userID,
                             sv_id=svId,
-                            ticket_count=ticketCount)
+                            ticket_count=request.form['ticketCount'],
+                            ticket_fare=request.form['ticketrate'])
         db.session.add(b1)
         db.session.commit()
-        return render_template('bookingSuccessful.html', userId=userID)
+        flash(
+            'Your Ticket booking is successful. Visit bookings page for more details',
+            'success')
+        return redirect('/user/' + str(userID) + "/home")
     currentVenueShow = ShowVenue.query.get(svId)
     currentShow = Show.query.filter_by(
         show_id=currentVenueShow.show_id).first()
@@ -55,14 +56,13 @@ def bookTicket(userID, svId):
                                             Rating.show_id).all()
 
     tags = Showtag.query.filter_by(show_id=currentShow.show_id).all()
-    if len(tags)==0:
-        tag='No tags'
+    if len(tags) == 0:
+        tag = 'No tags'
     else:
-        tag=''
+        tag = ''
         for each in tags:
             tag = tag + ';' + each.tags
-        tag=tag[1:]
-    print(tag)
+        tag = tag[1:]
     allRatings = {}
     for each in avgRatings:
         allRatings[each[0]] = each[1]

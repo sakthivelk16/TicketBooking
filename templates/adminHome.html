@@ -1,56 +1,85 @@
 <!DOCTYPE html>
 <html>
-
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
     <style>
-
+      #small {
+        border-style: ridge;
+        margin-right: 30px;
+        margin-top: 5px;
+        border-radius: 25px;
+        background-color: bisque;
+      }
     </style>
-</head>
+  </head>
 
-<body>
-    <div style="text-align: right;">
-       
-        <a href="/admin/{{adminId}}/venue">Venue</a>
-        <a href="/admin/{{adminId}}/profile">Profile</a>
-        <a href="/admin/{{adminId}}/show">Show</a>
-        <a href="/admin/login">Log out</a>
+  <body>
+    <div style="text-align: right">
+      {%if archive == 'archive'%}
+      <a href="/admin/{{adminId}}/home">Home</a>
+      {%endif%}
+      <a href="/admin/{{adminId}}/venue">Venue</a>
+      <a href="/admin/{{adminId}}/profile">Profile</a>
+      <a href="/admin/{{adminId}}/show">Show</a>
+      {%if archive != 'archive'%}
+      <a href="/admin/{{adminId}}/archive">Archive</a>
+      {%endif%}
+      <a href="/admin/login">Log out</a>
     </div>
+    {%if error == 'show'%}
     <div>
-        {%if error == 'show'%}
-        <p style="color:red;"> This Show is still running in one or few venue. Please delete the show from venue before
-            deleting the complete show</p>
-        {%endif%}
+      <p style="color: red">
+        This Show is still running in one or few venue. Please delete the show
+        from venue before deleting the complete show
+      </p>
     </div>
-    <div style="margin-left: 1%;" class="container">
-        <a href="/admin/{{adminId}}/venue/create">Create New Venue</a>
-        <a href="/admin/{{adminId}}/show/create">Create New Show</a>
-        <br> {%for each in Venue%}
-        <br> <b>{{each.venue_name}}&emsp;</b>
-        <a href="/admin/{{adminId}}/venue/{{each.venue_id}}/allocate" name="add" class="btn btn-secondary">Add New
-            Show</a>
-
+    {%endif%}
+    <div style="margin-left: 5%">
+      {%if archive != 'archive'%}
+      <a href="/admin/{{adminId}}/venue/create">Create New Venue</a>
+      <a href="/admin/{{adminId}}/show/create">Create New Show</a>
+      {%endif%}
+      <br />
+      <br />
+      {%for each in Venue%}
+      <b>{{each.venue_name}}&emsp;</b>
+      {%if archive != 'archive'%}
+      <a
+        href="/admin/{{adminId}}/venue/{{each.venue_id}}/allocate"
+        name="add"
+        class="btn btn-secondary"
+        >Add New Show</a
+      >
+      {%endif%}
+      <div class="row" style="margin-top: 10px">
         {%for each1 in each.shows%}
 
-        <div>
-            <label>{{each1.show_name}}</label><br>
-            <label>{{each1.time}}</label><br>
+        <div id="small" class="col-md-3">
+          <label>{{each1.show_name}}</label><br />
+          <label>{{each1.time}}</label><br />
 
-
-            <a name="edit" href="/admin/{{adminId}}/edit/{{each1.sv_id}}">Edit</a>
-            <a name="delete" href="/admin/{{adminId}}/delete/{{each1.sv_id}}">Delete</a>
-
+          {%if archive != 'archive'%}
+          <a name="edit" href="/admin/{{adminId}}/edit/{{each1.sv_id}}">Edit</a>
+          <a name="delete" href="/admin/{{adminId}}/delete/{{each1.sv_id}}"
+            >Delete</a
+          >
+          {%endif%}
         </div>
         {%endfor%}
-
-        {%endfor%}
-        <hr>
+      </div>
+      <hr />
+      {%endfor%}
     </div>
-    <hr>
-</body>
-
+  </body>
 </html>

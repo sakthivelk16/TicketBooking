@@ -1,6 +1,7 @@
-from flask import Flask, redirect, render_template, request, url_for
+from flask import Flask, get_flashed_messages, redirect, render_template, request, url_for, flash
 from models.module import *
 from flask import current_app as app
+
 
 @app.route("/", methods={"GET", "POST"})
 def login():
@@ -11,6 +12,7 @@ def login():
         u1 = Users.query.filter_by(username=username,
                                    password=password).first()
         if u1 is None:
+            flash('Invalid Login details', "danger")
             return render_template("login/login.html", error=True)
 
         return redirect("/user/" + str(u1.user_id) + "/home")
@@ -26,6 +28,7 @@ def adminLogin():
         u1 = Admin.query.filter_by(username=username,
                                    password=password).first()
         if u1 is None:
+            flash('Invalid Login details', "danger")
             return render_template("login/adminlogin.html", error=True)
 
         return redirect("/admin/" + str(u1.admin_id) + "/home")

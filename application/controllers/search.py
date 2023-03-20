@@ -1,4 +1,4 @@
-from flask import Flask, redirect, render_template, request, url_for, session
+from flask import Flask, flash, redirect, render_template, request, url_for, session
 from models.module import *
 from flask import current_app as app
 from datetime import datetime
@@ -119,15 +119,15 @@ def search(user_id):
                     Venue.venue_name.like('%' + request.form['venueSearch'] +
                                           '%')).all()
         if 'LocationSearch' in request.form:
-            v1 = Venue.query.filter_by(location=request.form['LocationSearch']).all()
+            v1 = Venue.query.filter_by(
+                location=request.form['LocationSearch']).all()
         if 'LocationSearch' in request.form or 'venue' in request.form:
+
             if len(v1) == 0:
-                return render_template(
-                    'search.html',
-                    userId=user_id,
-                    error=
-                    "There is no venue found with provided search details. Try different combination"
-                )
+                flash(
+                    'There is no venue found with provided search details. Try different combination',
+                    'danger')
+                return render_template('search.html', userId=user_id)
 
             ven = []
             for v in v1:
@@ -136,11 +136,12 @@ def search(user_id):
                 ShowVenue.venue_id.in_(ven),
                 ShowVenue.time > datetime.now()).all()
             if len(allVenueShow) == 0:
+                flash(
+                    "There is  venue found with provided search details. But there is no scheduled show to book Tickets",
+                    'warning')
                 return render_template(
                     'search.html',
                     userId=user_id,
-                    error=
-                    "There is  venue found with provided search details. But there is no scheduled show to book Tickets"
                 )
             session['venue'] = ven
             return redirect(url_for('filterResult', user_id=user_id))
@@ -161,12 +162,10 @@ def search(user_id):
                     Show.show_name.like('%' + request.form['showSearch'] +
                                         '%')).all()
             if len(s1) == 0:
-                return render_template(
-                    'search.html',
-                    userId=user_id,
-                    error=
-                    "There is no show found with provided search details. Try different combination"
-                )
+                flash(
+                    "There is no show found with provided search details. Try different combination",
+                    'danger')
+                return render_template('search.html', userId=user_id)
             shows = []
             ven = []
             for s in s1:
@@ -177,12 +176,10 @@ def search(user_id):
                 ShowVenue.time > datetime.now(),
                 ShowVenue.show_id.in_(shows)).all()
             if len(allVenueShow) == 0:
-                return render_template(
-                    'search.html',
-                    userId=user_id,
-                    error=
-                    "There is show found with provided search details but there is no show schdule to book tickets"
-                )
+                flash(
+                    "There is show found with provided search details but there is no show schdule to book tickets",
+                    "warning")
+                return render_template('search.html', userId=user_id)
             ven = [*set(ven)]
             session['venue'] = ven
             session['show'] = shows
@@ -192,12 +189,10 @@ def search(user_id):
             st1 = Showtag.query.filter(
                 Showtag.tags == request.form['tagSearch']).all()
             if len(st1) == 0:
-                return render_template(
-                    'search.html',
-                    userId=user_id,
-                    error=
-                    "There is no tag found with provided search details. Try different combination"
-                )
+                flash(
+                    "There is no tag found with provided search details. Try different combination",
+                    'danger')
+                return render_template('search.html', userId=user_id)
             shows = []
             ven = []
             for st in st1:
@@ -208,12 +203,10 @@ def search(user_id):
                 ShowVenue.time > datetime.now(),
                 ShowVenue.show_id.in_(shows)).all()
             if len(allVenueShow) == 0:
-                return render_template(
-                    'search.html',
-                    userId=user_id,
-                    error=
-                    "There is show found with provided search details but there is no show schdule to book tickets"
-                )
+                flash(
+                    "There is show found with provided search details but there is no show schdule to book tickets",
+                    'warning')
+                return render_template('search.html', userId=user_id)
             ven = [*set(ven)]
             session['venue'] = ven
             session['show'] = shows
@@ -233,26 +226,21 @@ def search(user_id):
                     for v in s.venues:
                         ven.append(v.venue_id)
             if len(shows) == 0:
-                return render_template(
-                    'search.html',
-                    userId=user_id,
-                    error=
-                    "There is no show found with provided search details. Try different Combination"
-                )
+                flash(
+                    "There is no show found with provided search details. Try different Combination",
+                    'danger')
+                return render_template('search.html', userId=user_id)
             allVenueShow = ShowVenue.query.filter(
                 ShowVenue.time > datetime.now(),
                 ShowVenue.show_id.in_(shows)).all()
             if len(allVenueShow) == 0:
-                return render_template(
-                    'search.html',
-                    userId=user_id,
-                    error=
-                    "There is show found with provided search details but there is no show schdule to book tickets"
-                )
+                flash(
+                    "There is show found with provided search details but there is no show schdule to book tickets",
+                    'warning')
+                return render_template('search.html', userId=user_id)
             ven = [*set(ven)]
             session['venue'] = ven
             session['show'] = shows
             return redirect(url_for('filterResult', user_id=user_id))
-        if 'LocationSearch' in request.form:
-            v1 = Venue.query.filter_by(location=request.form['LocationSearch'])
+
     return render_template('search.html', userId=user_id)

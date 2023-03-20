@@ -3,21 +3,27 @@ from models.module import *
 from datetime import datetime
 import string
 import random
+from flask_restful import Api
+from application.api.venue import VenueAPI
+from application.api.show import ShowAPI
+from application.api.allocation import AllocationAPI
+from application.api.ShowVenue import ShowAtVenueAPI, AllShowAtVenueAPI, ShowAtAllVenueAPI
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.sqlite3"
-
+api = Api()
 db.init_app(app)
+
+api.add_resource(ShowAPI, "/api/show", "/api/show/<int:showId>")
+api.add_resource(VenueAPI, "/api/venue", "/api/venue/<int:venueId>")
+api.add_resource(AllocationAPI, "/api/allocation",
+                 "/api/allocation/<int:allocId>")
+api.add_resource(ShowAtVenueAPI, "/api/venue/<int:venueId>/show/<int:showId>")
+api.add_resource(AllShowAtVenueAPI, "/api/venue/<int:venueId>/show")
+api.add_resource(ShowAtAllVenueAPI, "/api/show/<int:showId>/venue")
+
+api.init_app(app)
 app.app_context().push()
-
-
-@app.route("/test", methods={"GET", "POST"})
-def test():
-
-    a = ShowVenue.query.filter_by(venue_id=1).order_by(
-        ShowVenue.venue_id).order_by((ShowVenue.time)).all()
-    print(a)
-    return ('Good Night')
 
 
 @app.route("/user/<int:userId>/profile", methods={"GET", "POST"})
@@ -142,29 +148,51 @@ def userHome(userID):
                     innerjson["min_fare"] = e.fare2D
                 eachjson["shows"].append(innerjson)
             list.append(eachjson)
-    # print(list)
     return render_template("showDetails.html", userId=userID, list=list)
 
 
 # db.session.execute(db.select(ShowVenue).order_by(ShowVenue.venue_id)).scalars()
 
 
-@app.route("/admin/<int:a_id>/home", methods={"GET", "POST"})
-def adminHome(a_id):
-    if request.method == "POST":
-        username = request.form['loginId']
-        password = request.form['password']
-        u1 = Admin.query.filter_by(username=username,
-                                   password=password).first()
-        if u1 is None:
-            return render_template("login/adminlogin.html", error=True)
-
-        return redirect("/admin/" + str(u1.admin_id) + "/home")
-
+@app.route("/admin/<int:a_id>/archive", methods={"GET", "POST"})
+def adminarchive(a_id):
     v = Venue.query.all()
     list = []
     for e in v:
-        allVenueShow = ShowVenue.query.filter_by(venue_id=e.venue_id).all()
+        allVenueShow = ShowVenue.query.filter(
+            ShowVenue.venue_id == e.venue_id,
+            ShowVenue.time <= datetime.now()).all()
+
+        eachjson = {}
+        eachjson["venue_id"] = e.venue_id
+        eachjson["venue_name"] = e.venue_name
+        eachjson["place"] = e.place
+        eachjson["location"] = e.location
+        eachjson["shows"] = []
+
+        for ee in allVenueShow:
+            currentShow = Show.query.filter_by(show_id=ee.show_id).first()
+            innerjson = {}
+            innerjson["sv_id"] = ee.sv_id
+            innerjson["time"] = ee.time
+            innerjson["show_name"] = currentShow.show_name
+
+            eachjson["shows"].append(innerjson)
+        list.append(eachjson)
+    return render_template("adminHome.html",
+                           Venue=list,
+                           adminId=a_id,
+                           archive="archive")
+
+
+@app.route("/admin/<int:a_id>/home", methods={"GET", "POST"})
+def adminHome(a_id):
+    v = Venue.query.all()
+    list = []
+    for e in v:
+        allVenueShow = ShowVenue.query.filter(
+            ShowVenue.venue_id == e.venue_id,
+            ShowVenue.time > datetime.now()).all()
 
         eachjson = {}
         eachjson["venue_id"] = e.venue_id
@@ -193,6 +221,7 @@ from application.controllers.showAdmin import *
 from application.controllers.adminShowallocation import *
 from application.controllers.rate import *
 from application.controllers.search import *
+from application.controllers.matplot import *
 
 if __name__ == "__main__":
     app.debug = True

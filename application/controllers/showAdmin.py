@@ -1,6 +1,7 @@
-from flask import Flask, session, redirect, render_template, request, url_for
+from flask import Flask, flash, session, redirect, render_template, request, url_for
 from models.module import *
 from flask import current_app as app
+from datetime import datetime, timedelta
 
 app.secret_key = "abc"
 
@@ -8,11 +9,14 @@ app.secret_key = "abc"
 @app.route("/admin/<int:a_id>/show/create", methods={"GET", "POST"})
 def showCreate(a_id):
     if request.method == "POST":
-        print(request.form)
         name = request.form['showName']
         show1 = Show.query.filter_by(show_name=name).first()
         if show1 is not None:
-            return render_template("createShow.html", adminId=a_id, error=True)
+            flash(
+                ' Another Show exists with same Name. please choose different Name',
+                'danger')
+
+            return render_template("createShow.html", adminId=a_id)
         tags = request.form['tags']
         duration = request.form['duration']
         price = request.form['price']
@@ -81,7 +85,6 @@ def deleteShow(a_id, showId):
 @app.route("/admin/<int:a_id>/show/<int:showId>/edit", methods={"GET", "POST"})
 def editShow(a_id, showId):
     if request.method == "POST":
-        print(request.form)
         showjson = {}
         showjson['name'] = request.form['showName']
         showjson['tags'] = request.form['tags']
@@ -94,13 +97,43 @@ def editShow(a_id, showId):
         show1 = Show.query.filter_by(show_name=showjson['name']).all()
         for each in show1:
             if each.show_id != showId:
+                flash(
+                    'Another Show exists with same Name. please choose different Name',
+                    'danger')
                 return render_template(
                     "createShow.html",
-                    error=True,
                     adminId=a_id,
                     show=showjson,
                 )
         s1 = Show.query.get(showId)
+        conflict = False
+        if s1.duration != showjson['duration']:
+            myVenue = s1.venues
+            for eachven in myVenue:
+                allShowInCurrentVenue = ShowVenue.query.filter_by(
+                    venue_id=eachven.venue_id).order_by(
+                        (ShowVenue.time)).all()
+                for i in range(len(allShowInCurrentVenue)):
+                    if i == len(allShowInCurrentVenue) - 1:
+                        break
+                    if allShowInCurrentVenue[i].show_id == s1.show_id:
+                        if allShowInCurrentVenue[i].time + timedelta(
+                                minutes=15 + int(showjson['duration'])
+                        ) > allShowInCurrentVenue[i + 1].time:
+                            conflict = True
+                            conflictShow = allShowInCurrentVenue[i + 1]
+                            print(allShowInCurrentVenue[i + 1])
+                            print(allShowInCurrentVenue[i])
+        if (conflict):
+            showjson['duration']=''
+            flash(
+                'Edited duration for show is conflicting with booked Schedule. Try reducing show duration or stick to original duration',
+                'danger')
+            return render_template(
+                    "createShow.html",
+                    adminId=a_id,
+                    show=showjson,
+                )
         s1.show_name = showjson['name']
         s1.min_fare = showjson['price']
         s1.duration = showjson['duration']

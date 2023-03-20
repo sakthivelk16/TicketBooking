@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div style="text-align: right">
+      <a href="/admin/{{adminId}}/home">Home</a>
+      <a href="/admin/{{adminId}}/profile">Profile</a>
+      <a href="/admin/{{adminId}}/show">Show</a>
+      <a href="/admin/{{adminId}}/summary">Summary</a>
+      <a href="/admin/login">Log out</a>
+    </div>
+    <div>
+      <form method="post" id="venue_filter">
+        <label for="venue">Select Venue</label>
+        <select name="venue" id="venue" required>
+          {%for each in venue%}
+
+          <option value="{{each.venue_name}}">{{each.venue_name}}</option>
+          {%endfor%}</select
+        ><br />
+        <label for="">Filter Start Time</label>
+        <input type="datetime-local" name="startTime" /><br />
+        <label for="">Filter End Time</label>
+        <input type="datetime-local" name="endTime" /><br />
+        <button type="submit" name="venueSubmit">Filter and Plot</button>
+      </form>
+    </div>
+    <hr />
+    <div>
+      <form method="post" id="show_filter">
+        <label for="venue">Select Show</label>
+
+        <select name="show" id="show" required>
+          {%for each in show%}
+          <option value="{{each.show_name}}">{{each.show_name}}</option>
+          {%endfor%}</select
+        ><br />
+        <label for="">Filter Start Time</label>
+        <input type="datetime-local" name="startTime" /><br />
+        <label for="">Filter End Time</label>
+        <input type="datetime-local" name="endTime" /><br />
+        <button type="submit" name="showSubmit">Filter and Plot</button>
+      </form>
+    </div>
+  </body>
+</html>

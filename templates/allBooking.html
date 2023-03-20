@@ -1,14 +1,20 @@
 <!DOCTYPE html>
 <html>
-
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
     <style>
-        /* table,
+      /* table,
         th,
         td {
             border: 1px solid black;
@@ -20,49 +26,46 @@
             margin-right: auto;
         } */
     </style>
-</head>
+  </head>
 
-<body>
-    <div style="text-align: right;">
-        <a href="/user/{{userId}}/home">Home</a>
-        <a href="/user/{{userId}}/search">Search</a>
-        <a href="/user/{{userId}}/profile">Profile</a>
-        <a href="/">Log out</a>
-
+  <body>
+    <div style="text-align: right">
+      <a href="/user/{{userId}}/home">Home</a>
+      <a href="/user/{{userId}}/search">Search</a>
+      <a href="/user/{{userId}}/profile">Profile</a>
+      <a href="/">Log out</a>
     </div>
-    <div style="margin-left: 1%;" class="container">
-        <table class="table">
-            <tr>
-                <th scope="col">Venue name - Show Name</th>
-                <th scope="col">Show Timing</th>
-                <th scope="col">Rate</th>
-                <th scope="col">Details</th>
-            </tr>
-            {%for each in bookings%}
-            <tr>
-                <td>{{each.venue_name}}-{{each.show_name}}</td>
-                <td>{{each.time}}</td>
-                <td>
-                    {%if each.rated!='notRated'%}
-                    <label>You already rated {{each.rated}}/5 for this show</label>
-                    {%elif each.showStatus=='completed'%}
-                    <a href="/user/{{userId}}/rate/{{each.show_id}}" name="rate">Rate</a>
-                    {%else%}
-                    <label>You can rate for this show when it completed</label>
-                    {%endif%}
-                </td>
-                <td>
-                    <a href="/user/{{userId}}/details/{{each.bookingID}}" name="details">Details</a>
-                </td>
-            </tr>
-            {%endfor%}
-        </table>
-
-
-
-
+    <div style="margin-left: 1%" class="container">
+      <table class="table">
+        <tr>
+          <th scope="col">Venue name - Show Name</th>
+          <th scope="col">Show Timing</th>
+          <th scope="col">Rate</th>
+          <th scope="col">Details</th>
+        </tr>
+        {%for each in bookings%}
+        <tr>
+          <td>{{each.venue_name}}-{{each.show_name}}</td>
+          <td>{{each.time}}</td>
+          <td>
+            {%if each.rated!='notRated'%}
+            <label>You already rated {{each.rated}}/5 for this show</label>
+            {%elif each.showStatus=='completed'%}
+            <a href="/user/{{userId}}/rate/{{each.show_id}}" name="rate"
+              >Rate</a
+            >
+            {%else%}
+            <label>You can rate for this show when it completed</label>
+            {%endif%}
+          </td>
+          <td>
+            <a href="/user/{{userId}}/details/{{each.bookingID}}" name="details"
+              >Details</a
+            >
+          </td>
+        </tr>
+        {%endfor%}
+      </table>
     </div>
-
-</body>
-
+  </body>
 </html>

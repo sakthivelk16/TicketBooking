@@ -18,17 +18,9 @@ def bookingdetails(user_id, bookId):
     json['duration'] = curShow.duration
     json['showTime'] = curallocation.time
     json['bookedTicket'] = curBooking.ticket_count
-    if curShow.is3d and curShow.min_fare > curVenue.fare3D:
-        json['ticketCost'] = curShow.min_fare
-    elif curShow.is3d:
-        json['ticketCost'] = curVenue.fare3D
-    elif curShow.min_fare > curVenue.fare2D:
-        json['ticketCost'] = curShow.min_fare
-    else:
-        json['ticketCost'] = curVenue.fare2D
+    json['ticketCost'] = curBooking.ticket_fare
 
     json['totalTicketCost'] = json['ticketCost'] * json['bookedTicket']
-    print(curBooking.ticket_count)
     return render_template('bookingDetails.html', userId=user_id, json=json)
 
 
@@ -42,7 +34,7 @@ def ratePage(user_id, showId):
         db.session.add(r1)
         db.session.commit()
         return redirect('/user/' + str(user_id) + '/bookings')
-    
+
     rate1 = Rating.query.filter_by(user_id=user_id, show_id=showId).all()
     show1 = Show.query.get(showId)
     json = {}

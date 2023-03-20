@@ -1,4 +1,4 @@
-from flask import Flask, session, redirect, render_template, request, url_for
+from flask import Flask, flash, session, redirect, render_template, request, url_for
 from models.module import *
 from flask import current_app as app
 
@@ -43,7 +43,6 @@ def venueHome(a_id):
 def deleteVenue(a_id, venue_id):
     sv = ShowVenue.query.filter_by(venue_id=venue_id).all()
     if len(sv) > 0:
-        # error = json.dumps({'error': 'deleteVenue'})
         session['venueError'] = True
         return redirect(url_for('venueHome', a_id=a_id))
     s = Venue.query.get(venue_id)
@@ -64,10 +63,12 @@ def editVenue(a_id, venueId):
         fare3D = request.form['fare3D']
         venue1 = Venue.query.filter_by(venue_name=name).all()
         for each in venue1:
+            flash(
+                'There is Still some show allocated to this Venue. Please delete allocation from Venue before Deleting this Venue',
+                'danger')
             if each.venue_id != venueId:
                 return render_template(
                     "createVenue.html",
-                    error=True,
                     adminId=a_id,
                     venue=request.form,
                 )

@@ -7,11 +7,9 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-    </style>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+    crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -22,22 +20,29 @@
         <a href="/admin/{{adminId}}/show">Show</a>
         <a href="/admin/login">Log out</a>
     </div>
-    {% if error=="timeConflict" %}
-    <p style="color:red;">The show can be created present time +15 mins</p>
-    {% elif error=="scheduleConflict" %}
-    <p style="color:red;">There is some other show blocking this time.please choose differnt time</p>
-    {% endif%}
+    {% for message in get_flashed_messages() %}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    {% endfor %}
+   
     <div style="margin-left: 1%;" class="container">
         <form method="post" id="allocation">
             <label for="showTime">show:</label>
             <select id="selectShow" name="selectShow">
                 {% for each in show%}
+                {%if myshow==each.show_name%}
+                <option value="{{each.show_id}}" selected>{{each.show_name}}</option>
+                {%else%}
                 <option value="{{each.show_id}}">{{each.show_name}}</option>
+                {%endif%}
                 {%endfor%}
             </select>
             <br>
             <label for="showTime">showTime:</label>
-            <input type="datetime-local" id="showTime" name="showTime" required>
+            <input type="datetime-local" id="showTime" name="showTime" value="{{sv.time}}" required>
             <button type="submit">Allocate</button>
         </form>
 
