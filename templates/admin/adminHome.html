@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <style>
+    #small {
+      border-style: ridge;
+      margin-right: 30px;
+      margin-top: 5px;
+      border-radius: 25px;
+      background-color: bisque;
+    }
+  </style>
+</head>
+
+<body>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous">
+    </script>
+  <div style="text-align: right">
+
+    <a href="/admin/{{adminId}}/venue">Venue</a>
+    <a href="/admin/{{adminId}}/show">Show</a>
+    <a href="/admin/{{adminId}}/profile">Profile</a>
+    <a href="/admin/{{adminId}}/archive">Archive</a>
+    <a href="/admin/login">Log out</a>
+  </div>
+
+
+    {% for category, message in get_flashed_messages(with_categories=True) %}
+    <div class="alert alert-{{category}} alert-dismissible fade show" role="alert">
+      {{ message }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+
+
+  <div style="margin-left: 2%">
+    <a href="/admin/{{adminId}}/venue/create" class="btn btn-primary">Create New Venue</a>
+    <a href="/admin/{{adminId}}/show/create" class="btn btn-primary">Create New Show</a>
+    <br />
+    <br />
+    {% if Venue|length ==0 %}
+    <h4 style="text-align: center;">No Venue are available to assign Show. Create a new venue for allocation</h4>
+    {%endif%}
+    {%for each in Venue%}
+    <b>{{each.venue_name}}&emsp;</b>
+    <a href="/admin/{{adminId}}/venue/{{each.venue_id}}/allocate" name="add" class="btn btn-secondary">Add New Show</a>
+    <div class="row" style="margin-top: 10px">
+      {%for each1 in each.shows%}
+
+      <div id="small" class="col-md-3">
+        <label>{{each1.show_name}}</label><br />
+        <label>{{each1.time}}</label><br />
+
+        <a name="edit" href="/admin/{{adminId}}/edit/{{each1.sv_id}}">Edit</a>
+
+        <a name="delete"
+          onclick="return window.confirm('Deleting this Allocation, will also delete all the booking related to it. Are you sure, you want to delete it?')"
+          href="/admin/{{adminId}}/delete/{{each1.sv_id}}">Delete</a>
+      </div>
+      {%endfor%}
+    </div>
+    <hr />
+    {%endfor%}
+  </div>
+</body>
+
+</html>

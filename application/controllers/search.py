@@ -93,7 +93,7 @@ def filterResult(user_id):
                     innerjson["min_fare"] = currentVenue.fare2D
                 eachjson["shows"].append(innerjson)
             list.append(eachjson)
-    return render_template("showDetails.html",
+    return render_template("user/showDetails.html",
                            userId=user_id,
                            list=list,
                            search='searchpage')
@@ -127,7 +127,7 @@ def search(user_id):
                 flash(
                     'There is no venue found with provided search details. Try different combination',
                     'danger')
-                return render_template('search.html', userId=user_id)
+                return render_template('user/search.html', userId=user_id)
 
             ven = []
             for v in v1:
@@ -140,7 +140,7 @@ def search(user_id):
                     "There is  venue found with provided search details. But there is no scheduled show to book Tickets",
                     'warning')
                 return render_template(
-                    'search.html',
+                    'user/search.html',
                     userId=user_id,
                 )
             session['venue'] = ven
@@ -165,7 +165,7 @@ def search(user_id):
                 flash(
                     "There is no show found with provided search details. Try different combination",
                     'danger')
-                return render_template('search.html', userId=user_id)
+                return render_template('user/search.html', userId=user_id)
             shows = []
             ven = []
             for s in s1:
@@ -179,7 +179,7 @@ def search(user_id):
                 flash(
                     "There is show found with provided search details but there is no show schdule to book tickets",
                     "warning")
-                return render_template('search.html', userId=user_id)
+                return render_template('user/search.html', userId=user_id)
             ven = [*set(ven)]
             session['venue'] = ven
             session['show'] = shows
@@ -192,7 +192,7 @@ def search(user_id):
                 flash(
                     "There is no tag found with provided search details. Try different combination",
                     'danger')
-                return render_template('search.html', userId=user_id)
+                return render_template('user/search.html', userId=user_id)
             shows = []
             ven = []
             for st in st1:
@@ -206,7 +206,7 @@ def search(user_id):
                 flash(
                     "There is show found with provided search details but there is no show schdule to book tickets",
                     'warning')
-                return render_template('search.html', userId=user_id)
+                return render_template('user/search.html', userId=user_id)
             ven = [*set(ven)]
             session['venue'] = ven
             session['show'] = shows
@@ -229,7 +229,7 @@ def search(user_id):
                 flash(
                     "There is no show found with provided search details. Try different Combination",
                     'danger')
-                return render_template('search.html', userId=user_id)
+                return render_template('user/search.html', userId=user_id)
             allVenueShow = ShowVenue.query.filter(
                 ShowVenue.time > datetime.now(),
                 ShowVenue.show_id.in_(shows)).all()
@@ -237,10 +237,10 @@ def search(user_id):
                 flash(
                     "There is show found with provided search details but there is no show schdule to book tickets",
                     'warning')
-                return render_template('search.html', userId=user_id)
+                return render_template('user/search.html', userId=user_id)
             ven = [*set(ven)]
             session['venue'] = ven
             session['show'] = shows
             return redirect(url_for('filterResult', user_id=user_id))
 
-    return render_template('search.html', userId=user_id)
+    return render_template('user/search.html', userId=user_id)

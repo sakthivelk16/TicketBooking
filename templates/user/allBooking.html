@@ -35,6 +35,10 @@
       <a href="/user/{{userId}}/profile">Profile</a>
       <a href="/">Log out</a>
     </div>
+    {% if list|length ==0 %}
+    <h4 style="text-align: center;">You did not book any ticket yet. You booked ticket will be available here</h4>
+    {%else%}
+  
     <div style="margin-left: 1%" class="container">
       <table class="table">
         <tr>
@@ -67,5 +71,7 @@
         {%endfor%}
       </table>
     </div>
+    {%endif%}
+
   </body>
 </html>

@@ -1,155 +1,99 @@
 <!DOCTYPE html>
 
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
-      crossorigin="anonymous"
-    />
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
-      crossorigin="anonymous"
-    ></script>
-    <style>
-      form > div,
-      button,
-      p {
-        padding-left: 3%;
-      }
-    </style>
-  </head>
 
-  <body>
-    {% for category, message in get_flashed_messages(with_categories=True) %}
-    <div
-      class="alert alert-{{category}} alert-dismissible fade show"
-      role="alert"
-    >
-      {{ message }}
-      <button
-        type="button"
-        class="btn-close"
-        data-bs-dismiss="alert"
-        aria-label="Close"
-      ></button>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous" />
+
+  <style>
+    form>div,
+    button,
+    p {
+      padding-left: 3%;
+    }
+  </style>
+</head>
+
+<body>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+    crossorigin="anonymous"></script>
+  {% for category, message in get_flashed_messages(with_categories=True) %}
+  <div class="alert alert-{{category}} alert-dismissible fade show" role="alert">
+    {{ message }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+
+  {% endfor %}
+  <h1>User Registration</h1>
+  <form method="POST" id="user-details">
+    <div class="mb-3">
+      <div class="form-group row">
+        <label for="fname" class="col-sm-2 col-form-label">First Name</label>
+        <div class="col-sm-5">
+          <input name="fname" class="rounded" type="text" pattern="[a-zA-Z\s]+"
+            title="Only Space and alphabets are allowed" required value="{{fname}}" />
+        </div>
+      </div>
     </div>
 
-    {% endfor %}
-    <h1>User Registration</h1>
-    <form method="POST" id="user-details">
-      <div class="mb-3">
-        <div class="form-group row">
-          <label for="fname" class="col-sm-2 col-form-label">First Name</label>
-          <div class="col-sm-5">
-            <input
-              name="fname"
-              class="rounded"
-              type="text"
-              pattern="[a-zA-Z\s]+"
-              title="Only Space and alphabets are allowed"
-              required
-              value="{{fname}}"
-            />
-          </div>
+    <div class="mb-3">
+      <div class="form-group row">
+        <label for="lname" class="col-sm-2 col-form-label">Last Name</label>
+        <div class="col-sm-5">
+          <input name="lname" class="rounded" type="text" required pattern="[a-zA-Z\s]+"
+            title="Only Space and alphabets are allowed" value="{{lname}}" id="lname" />
         </div>
       </div>
+    </div>
 
-      <div class="mb-3">
-        <div class="form-group row">
-          <label for="lname" class="col-sm-2 col-form-label">Last Name</label>
-          <div class="col-sm-5">
-            <input
-              name="lname"
-              class="rounded"
-              type="text"
-              required
-              pattern="[a-zA-Z\s]+"
-              title="Only Space and alphabets are allowed"
-              value="{{lname}}"
-              id="lname"
-            />
-          </div>
+    <div class="mb-3">
+      <div class="form-group row">
+        <label for="mobile" class="col-sm-2 col-form-label">Phone Number</label>
+        <div class="col-sm-5">
+          <input name="mobile" type="text" class="rounded" pattern="[0-9]{10}" title="Enter 10 digits"
+            value="{{mobile}}" id="mobile" />
         </div>
       </div>
+    </div>
 
-      <div class="mb-3">
-        <div class="form-group row">
-          <label for="mobile" class="col-sm-2 col-form-label"
-            >Phone Number</label
-          >
-          <div class="col-sm-5">
-            <input
-              name="mobile"
-              type="text"
-              class="rounded"
-              pattern="[0-9]{10}"
-              title="Enter 10 digits"
-              value="{{mobile}}"
-              id="mobile"
-            />
-          </div>
+    <div class="mb-3">
+      <div class="form-group row">
+        <label for="email" class="col-sm-2 col-form-label">Email Id</label>
+        <div class="col-sm-5">
+          <input name="email" type="email" class="rounded" value="{{email}}" id="email" />
         </div>
       </div>
+    </div>
 
-      <div class="mb-3">
-        <div class="form-group row">
-          <label for="email" class="col-sm-2 col-form-label">Email Id</label>
-          <div class="col-sm-5">
-            <input
-              name="email"
-              type="email"
-              class="rounded"
-              value="{{email}}"
-              id="email"
-            />
-          </div>
+    <div class="mb-3">
+      <div class="form-group row">
+        <label for="username" class="col-sm-2 col-form-label">UserName</label>
+        <div class="col-sm-5">
+          <input name="username" type="text" class="rounded" pattern="[a-zA-Z0-9]+"
+            title="Only alphabets and numbers are allowed" value="{{username}}" required id="username" />
         </div>
       </div>
+    </div>
 
-      <div class="mb-3">
-        <div class="form-group row">
-          <label for="username" class="col-sm-2 col-form-label">UserName</label>
-          <div class="col-sm-5">
-            <input
-              name="username"
-              type="text"
-              class="rounded"
-              pattern="[a-zA-Z0-9]+"
-              title="Only alphabets and numbers are allowed"
-              value="{{username}}"
-              required
-              id="username"
-            />
-          </div>
+    <div class="mb-3">
+      <div class="form-group row">
+        <label for="password" class="col-sm-2 col-form-label">Password</label>
+        <div class="col-sm-5">
+          <input type="password" class="rounded" name="password" minlength="8" required id="password" />
         </div>
       </div>
+    </div>
 
-      <div class="mb-3">
-        <div class="form-group row">
-          <label for="password" class="col-sm-2 col-form-label">Password</label>
-          <div class="col-sm-5">
-            <input
-              type="password"
-              class="rounded"
-              name="password"
-              minlength="8"
-              required
-              id="password"
-            />
-          </div>
-        </div>
-      </div>
+    <button type="submit" style="margin-left: 20%" class="btn btn-primary">
+      Register
+    </button>
+  </form>
+  <br />
+  <p>Already having an Id. Go to <a href="/">Login</a> Page</p>
+</body>
 
-      <button type="submit" style="margin-left: 20%" class="btn btn-primary">
-        Register
-      </button>
-    </form>
-    <br />
-    <p>Already having an Id. Go to <a href="/">Login</a> Page</p>
-  </body>
 </html>

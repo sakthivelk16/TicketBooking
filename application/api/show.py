@@ -4,9 +4,6 @@ import json
 from flask import make_response
 from models.module import *
 
-
-
-
 def verifyInterger(value, defaultcode, code, message):
     try:
         return int(value)
@@ -90,7 +87,6 @@ class ShowAPI(Resource):
 
     def get(self, showId):
         currentShow = Show.query.get(showId)
-        print(gettags(showId))
         if currentShow:
             return {
                 'show_id': currentShow.show_id,

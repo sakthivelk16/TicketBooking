@@ -1,4 +1,4 @@
-from flask import Flask, get_flashed_messages, redirect, render_template, request, url_for, flash
+from flask import Flask,  redirect, render_template, request, url_for, flash
 from models.module import *
 from flask import current_app as app
 

@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from flask import Flask, redirect, render_template, request, url_for
 from models.module import *
 from flask import current_app as app
-
+import os
 
 def subplot():
     try:
@@ -106,8 +106,13 @@ def subplot():
 
 @app.route("/admin/<int:adminId>/summary", methods={"GET", "POST"})
 def summary(adminId):
+    # create path if doesn't exist
+    path = "static"
+    isExist = os.path.exists(path)
+    if not isExist:
+        os.makedirs(path)
     subplot()
-    return render_template('summary.html', adminId=adminId)
+    return render_template('admin/summary.html', adminId=adminId)
 
 
 @app.route("/admin/<int:adminId>/summary/advanced", methods={"GET", "POST"})
@@ -129,8 +134,7 @@ def summaryAdvanced(adminId):
             # having time between "2023-03-18 00:00:00" and "2023-03-18 23:59:59"and venue_name="abc" order by percent_book desc'
     allVen = Venue.query.all()
     allShow = Show.query.all()
-    print(allVen)
-    return render_template('summaryAdvanced.html',
+    return render_template('admin/summaryAdvanced.html',
                            adminId=adminId,
                            show=allShow,
                            venue=allVen)

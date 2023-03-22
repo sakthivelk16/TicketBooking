@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous" />
+  <style>
+    #small {
+      /* border-style: ridge; */
+      margin-right: 30px;
+      margin-top: 5px;
+      border-radius: 25px;
+      background-color: #e9e7e7;
+    }
+  </style>
+</head>
+
+<body>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+    crossorigin="anonymous"></script>
+  <div style="text-align: right">
+    <a href="/admin/{{adminId}}/home">Home</a>
+    <a href="/admin/{{adminId}}/venue">Venue</a>
+    <a href="/admin/{{adminId}}/profile">Profile</a>
+    <a href="/admin/login">Log out</a>
+  </div>
+  
+  
+  {% for category, message in get_flashed_messages(with_categories=True) %}
+  <div class="alert alert-{{category}} alert-dismissible fade show" role="alert">
+    {{ message }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  {% endfor %}
+  
+  <div style="text-align: center;">
+    <a href="/admin/{{adminId}}/show/create" class="btn btn-primary">Create New Show</a>
+
+  </div>
+  <div class="row" style="margin-top: 10px">
+    {% if allShow|length ==0 %}
+    <h4 style="text-align: center;">No show are Created. Create A new one</h4>
+    {%endif%}
+    {%for each in allShow%}
+    <div id="small" class="col-md-3">
+
+      <h6>Show Name: {{each.show_name}}</h6>
+      <label>Minimum Fare Detail: {{each.min_fare}}</label><br />
+      <label>Is 3D: {{each.is3d}}</label><br />
+      <label>Tags: {{each.tags}}</label><br />
+      <a href="/admin/{{adminId}}/show/{{each.show_id}}/edit">Edit</a>
+      <a onclick="return window.confirm('You are not allowed to delete if there is any allocation. Deleting non-allocated  Show, will also delete all the rating of Show. Are you sure, you want to delete it?')"
+        href="/admin/{{adminId}}/show/{{each.show_id}}/delete">Delete</a>
+    </div>
+    {%endfor%}
+  </div>
+</body>
+
+</html>

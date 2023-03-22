@@ -21,7 +21,7 @@ def bookingdetails(user_id, bookId):
     json['ticketCost'] = curBooking.ticket_fare
 
     json['totalTicketCost'] = json['ticketCost'] * json['bookedTicket']
-    return render_template('bookingDetails.html', userId=user_id, json=json)
+    return render_template('user/bookingDetails.html', userId=user_id, json=json)
 
 
 @app.route("/user/<int:user_id>/rate/<int:showId>", methods={"GET", "POST"})
@@ -44,4 +44,4 @@ def ratePage(user_id, showId):
     json['movieType'] = '3D' if show1.is3d else '2D'
     json['showId'] = showId
 
-    return render_template('rate.html', userId=user_id, show=json)
+    return render_template('user/rate.html', userId=user_id, show=json)

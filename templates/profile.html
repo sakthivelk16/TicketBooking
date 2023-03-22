@@ -52,13 +52,22 @@
         <th>UserName</th>
         <td>{{user.username}}</td>
       </tr>
-      {%if admin==True%}
+     
       <tr>
-        <td colspan="2" style="text-align: center">
-          <a href="/admin/{{userId}}/generete">generte code</a>
+        {%if admin==True%}
+        <td >
+          <a href="/admin/{{userId}}/generete">Generte code</a>
         </td>
+        <td  >
+          <a href="/admin/{{userId}}/resetpassword">Reset Password</a>
+        </td>
+       {%else%}
+        <td colspan="2" style="text-align: center">
+          <a href="/user/{{userId}}/resetpassword">Reset Password</a>
+        </td>
+        {%endif%}
       </tr>
-      {%endif%}
+    
     </table>
     <!-- <div class="container rounded bg-white mt-5 mb-5">
         <div class="row">

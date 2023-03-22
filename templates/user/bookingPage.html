@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <style></style>
+</head>
+
+<body>
+  <div style="text-align: right">
+    <a href="/user/{{userId}}/home">Home</a>
+    <a href="/user/{{userId}}/search">Search</a>
+    <a href="/user/{{userId}}/bookings">Booking</a>
+    <a href="/user/{{userId}}/profile">Profile</a>
+    <a href="/">Log out</a>
+  </div>
+  <div class="container ">
+    <div class="row text-center">
+      <div class="col"></div>
+      <div class="col-6">
+        <h3>Booking page</h3>
+      </div>
+      <div class="col"></div>
+    </div>
+  </div>
+  <form method="POST" id="bookDetails">
+    <div class="container ">
+      <div class="row">
+        <div class="col"></div>
+        <div class="col-3 p-1">
+          <span>Venue</h3>
+        </div>
+        <div class="col-3 p-1">
+          <span>{{venue.venue_name}}</span>
+        </div>
+        <div class="col"></div>
+      </div>
+      <div class="row">
+        <div class="col"></div>
+        <div class="col-3 p-1">
+          <label>Show</label>
+        </div>
+        <div class="col-3 p-1">
+          <label>{{show.show_name}}</label>
+        </div>
+        <div class="col"></div>
+      </div>
+      <div class="row">
+        <div class="col"></div>
+        <div class="col-3 p-1">
+          <label>Show Time</label>
+        </div>
+        <div class="col-3 p-1">
+          <label>{{currentVenueShow.time}}</label>
+        </div>
+        <div class="col"></div>
+      </div>
+      <div class="row">
+        <div class="col"></div>
+        <div class="col-3 p-1">
+          <label>Rating</label>
+        </div>
+        <div class="col-3 p-1">
+          <label>{{rate}}</label>
+        </div>
+        <div class="col"></div>
+      </div>
+      <div class="row">
+        <div class="col"></div>
+        <div class="col-3 p-1">
+          <label id="AvailableTicket">Available ticket</label><br />
+        </div>
+        <div class="col-3 p-1">
+          <label>{{availabelTicket}}</label>
+        </div>
+        <div class="col"></div>
+      </div>
+      <div class="row">
+        <div class="col"></div>
+        <div class="col-3 p-1">
+          <label>Fare per Ticket</label>
+        </div>
+        <div class="col-3 p-1">
+          <input type="number" style="background-color: gainsboro;" name="ticketrate" id="ticketrate" value="{{fare}}"
+            readonly /><br />
+        </div>
+        <div class="col"></div>
+      </div>
+      <div class="row">
+        <div class="col"></div>
+        <div class="col-3 p-1">
+          <label>No. of Tickets</label>
+        </div>
+        <div class="col-3 p-1">
+          <input type="number" name="ticketCount" id="ticketCount" min="1" max="{{availabelTicket}}"
+            onblur="calculateTotal()" /><br>
+        </div>
+        <div class="col"></div>
+      </div>
+      <div class="row">
+        <div class="col"></div>
+        <div class="col-3 p-1">
+          <label>Total Fare</label>
+        </div>
+        <div class="col-3 p-1">
+          <input type="number" style="background-color: gainsboro;" name="totalFare" id="totalFare" readonly />
+        </div>
+        <div class="col"></div>
+      </div>
+      <div class="row">
+        <div class="col"></div>
+
+        <div class="col-6" style="text-align: center;">
+          <button type="submit" name="Book" class="btn btn-primary">
+            Book
+          </button>
+        </div>
+        <div class="col"></div>
+      </div>
+    </div>
+
+
+
+
+
+  </form>
+
+
+
+  <script>
+    function calculateTotal() {
+      a = document.getElementById("ticketrate").value
+      b = document.getElementById("ticketCount").value
+      document.getElementById("totalFare").value = a * b
+    }
+  </script>
+</body>
+
+</html>
