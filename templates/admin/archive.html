@@ -2,6 +2,7 @@
 <html>
 
 <head>
+  <title>Archive</title>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -22,7 +23,7 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous">
 
-     
+
     </script>
   <div style="text-align: right">
 
@@ -30,16 +31,17 @@
     <a href="/admin/{{adminId}}/venue">Venue</a>
     <a href="/admin/{{adminId}}/show">Show</a>
     <a href="/admin/{{adminId}}/profile">Profile</a>
+    <a href="/admin/{{adminId}}/summary">Summary</a>
     <a href="/admin/login">Log out</a>
   </div>
 
   <div>
-  {% for category, message in get_flashed_messages(with_categories=True) %}
-  <div class="alert alert-{{category}} alert-dismissible fade show" role="alert">
-    {{ message }}
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-  </div>
-  {% endfor %}
+    {% for category, message in get_flashed_messages(with_categories=True) %}
+    <div class="alert alert-{{category}} alert-dismissible fade show" role="alert">
+      {{ message }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
   </div>
 
   <div style="margin-left: 5%">
@@ -49,8 +51,8 @@
 
     {%for each in Venue%}
     {% if each.shows|length >0 %}
-    <b>{{each.venue_name}}&emsp;</b>
-    
+    <b>{{each.venue_name}}-{{each.location}}&emsp;</b>
+
     <div class="row" style="margin-top: 10px">
       {%for each1 in each.shows%}
 
@@ -58,7 +60,7 @@
         <label>{{each1.show_name}}</label><br />
         <label>{{each1.time}}</label><br />
 
-       
+
         <a name="delete"
           onclick="return window.confirm('Deleting this Allocation, will also delete all the booking related to it. Are you sure, you want to delete it?')"
           href="/admin/{{adminId}}/delete/{{each1.sv_id}}">Delete</a>

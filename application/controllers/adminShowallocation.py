@@ -27,7 +27,7 @@ def allocation(a_id, venue_id):
         currentTime = currentTime.replace(second=0, microsecond=0)
         currentTimeplus15 = currentTime + timedelta(minutes=15)
         if expectedStartTime < currentTimeplus15:
-            flash("The show can be created present time +15 mins")
+            flash("The show can be created present time +15 mins", "warning")
 
             return render_template(
                 "admin/allocation.html", adminId=a_id, show=s1, sv=None
@@ -62,7 +62,8 @@ def allocation(a_id, venue_id):
                     break
         if conflict:
             flash(
-                "There is some other show blocking this time.please choose differnt time"
+                "There is some other show blocking this time.please choose differnt time",
+                "warning",
             )
             return render_template(
                 "admin/allocation.html", adminId=a_id, show=s1, sv=None
@@ -78,7 +79,10 @@ def allocation(a_id, venue_id):
             return redirect("/admin/" + str(a_id) + "/home")
     s1 = Show.query.all()
     if len(s1) == 0:
-        flash("No shows are available to allocate. Please create New show before adding Show ro venue", "danger")
+        flash(
+            "No shows are available to allocate. Please create New show before adding Show ro venue",
+            "danger",
+        )
         return redirect("/admin/" + str(a_id) + "/home")
     return render_template("admin/allocation.html", adminId=a_id, show=s1, sv=None)
 
@@ -124,7 +128,7 @@ def editAllocation(a_id, sv_id):
         currentTime = currentTime.replace(second=0, microsecond=0)
         currentTimeplus15 = currentTime + timedelta(minutes=15)
         if expectedStartTime < currentTimeplus15:
-            flash("The show can be created present time +15 mins")
+            flash("The show can be created present time +15 mins", "warning")
             return render_template(
                 "admin/allocation.html", adminId=a_id, show=s1, sv=None
             )
@@ -158,7 +162,8 @@ def editAllocation(a_id, sv_id):
                     break
         if conflict:
             flash(
-                "There is some other show blocking this time.please choose differnt time"
+                "There is some other show blocking this time.please choose differnt time",
+                "warning",
             )
 
             return render_template(

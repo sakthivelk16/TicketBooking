@@ -2,6 +2,8 @@
 <html>
 
 <head>
+  <title>UserHome</title>
+
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
@@ -46,7 +48,7 @@
   <div style="margin-left: 1%">
     {% for venue in list%}
     
-    <h3>{{venue.venue_name}}</h3>
+    <h3>{{venue.venue_name}}-{{venue.location}}</h3>
     <div class="row" style="margin-top: 10px">
       {% for show in venue.shows%}
       <div id="small" class="col-md-3">

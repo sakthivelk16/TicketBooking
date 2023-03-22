@@ -224,6 +224,10 @@ class AllocationAPI(Resource):
         currentAlloc = ShowVenue.query.get(allocId)
 
         if currentAlloc:
+            curBooking=BookingDetails.query.filter_by(sv_id=allocId).all()
+            for each in curBooking:
+                db.session.delete(each)
+                db.session.commit()
             db.session.delete(currentAlloc)
             db.session.commit()
             raise NotFoundError(200)

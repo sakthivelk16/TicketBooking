@@ -14,7 +14,7 @@ def register():
         password = request.form["password"]
         isexist = Users.query.filter_by(username=username).all()
         if len(isexist) > 0:  # verify user name exist in login table
-            flash('This username is already exist> please choose differnt one',
+            flash('This username is already exist. Please choose differnt one',
                   'danger')
             return render_template(
                 "userRegistration/userRegistration.html",
@@ -72,7 +72,7 @@ def adminRegister():
         db.session.commit()
         isexist = Admin.query.filter_by(username=username).all()
         if len(isexist) > 0:  # verify user name exist in login table
-            flash('This username is already exist> please choose differnt one',
+            flash('This username is already exist. Please choose differnt one',
                   'danger')
             return render_template(
                 "userRegistration/adminRegistration.html",

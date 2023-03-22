@@ -20,6 +20,7 @@ def myBookings(userID):
 
         json = {}
         json["venue_name"] = currentVenue.venue_name
+        json["location"] = currentVenue.location
         json["show_id"] = currentShow.show_id
         json["bookingID"] = eachBooking.booking_id  # having issue need a fix
         json["show_name"] = currentShow.show_name
