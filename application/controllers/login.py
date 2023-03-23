@@ -2,8 +2,11 @@ from flask import Flask,  redirect, render_template, request, url_for, flash
 from models.module import *
 from flask import current_app as app
 
-
 @app.route("/", methods={"GET", "POST"})
+def intialPage():
+    return redirect('/user/login')
+
+@app.route("/user/login", methods={"GET", "POST"})
 def login():
     if request.method == "POST":
         username = request.form['loginId']

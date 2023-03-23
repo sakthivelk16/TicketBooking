@@ -11,10 +11,13 @@ from application.api.ShowVenue import (
     AllShowAtVenueAPI,
     ShowAtAllVenueAPI,
 )
+from flask_cors import CORS
 
 app = Flask(__name__)
+
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.sqlite3"
 api = Api()
+CORS(app)
 db.init_app(app)
 
 api.add_resource(ShowAPI, "/api/show", "/api/show/<int:showId>")
@@ -25,6 +28,7 @@ api.add_resource(AllShowAtVenueAPI, "/api/venue/<int:venueId>/show")
 api.add_resource(ShowAtAllVenueAPI, "/api/show/<int:showId>/venue")
 
 api.init_app(app)
+
 app.app_context().push()
 
 
