@@ -27,7 +27,7 @@ def gettags(show_id):
     tags = Showtag.query.filter_by(show_id=show_id).all()
     a = ""
     for each in tags:
-        a += ";" + each.tags
+        a += ";" + each.tags.capitalize()
     return a[1:]
 
 
@@ -57,7 +57,11 @@ def showValidation(type):
         raise BuisnessValidationError(400, "SHOW004", "is3D is required")
     if (tags is None and type == "post") or tags == "":
         raise BuisnessValidationError(400, "SHOW005", "tags is required")
-
+    
+    if show_name is not None and len(show_name)>64:
+        raise BuisnessValidationError(
+                400, "MIN_MAX_Conflict", "Show Name length should below 32"
+            )
     if min_fare is not None:
         min_fare = verifyInterger(
             min_fare, 400, "SHOW006", "minimum Fare should be integer"
@@ -66,6 +70,10 @@ def showValidation(type):
         if min_fare <= 0:
             raise BuisnessValidationError(
                 400, "SHOW007", "minimum Fare should be greater than 0"
+            )
+        if min_fare > 300 and min_fare<50:
+                raise BuisnessValidationError(
+                400, "MIN_MAX_Conflict", "Movie Fare details should be 50 to 300"
             )
     if duration is not None:
         duration = verifyInterger(
@@ -76,7 +84,10 @@ def showValidation(type):
             raise BuisnessValidationError(
                 400, "SHOW009", "duration should be greater than 0"
             )
-
+        if min_fare > 200 and min_fare<30:
+                raise BuisnessValidationError(
+                400, "MIN_MAX_Conflict", "Movie Duration should be 30 to 200 mins"
+            )
     if is3d is not None:
         if not (is3d == "True" or is3d == "False"):
             raise BuisnessValidationError(
@@ -90,7 +101,7 @@ class ShowAPI(Resource):
         if currentShow:
             return {
                 "show_id": currentShow.show_id,
-                "show_name": currentShow.show_name,
+                "show_name": currentShow.show_name.capitalize(),
                 "min_fare": currentShow.min_fare,
                 "duration": currentShow.duration,
                 "is3d": currentShow.is3d,
@@ -108,26 +119,26 @@ class ShowAPI(Resource):
         is3d = args.get("is3d", None)
         tags = args.get("tags", None)
 
-        currentShowId = Show.query.filter_by(show_name=show_name).first()
+        currentShowId = Show.query.filter_by(show_name=show_name.lower()).first()
 
         if currentShowId:
             raise NotFoundError(409)
         newShow = Show(
-            show_name=show_name,
+            show_name=show_name.lower(),
             min_fare=min_fare,
             duration=duration,
             is3d=False if is3d == "False" else True,
         )
         db.session.add(newShow)
         db.session.commit()
-        currentShow = Show.query.filter_by(show_name=show_name).first()
+        currentShow = Show.query.filter_by(show_name=show_name.lower()).first()
         for each in tags.split(";"):
-            eachShowTag = Showtag(show_id=currentShow.show_id, tags=each)
+            eachShowTag = Showtag(show_id=currentShow.show_id, tags=each.lower())
             db.session.add(eachShowTag)
             db.session.commit()
         return {
             "show_id": currentShow.show_id,
-            "show_name": currentShow.show_name,
+            "show_name": currentShow.show_name.capitalize(),
             "min_fare": currentShow.min_fare,
             "duration": currentShow.duration,
             "is3d": currentShow.is3d,
@@ -145,14 +156,14 @@ class ShowAPI(Resource):
         duration = args.get("duration", None)
         is3d = args.get("is3d", None)
         tags = args.get("tags", None)
-
-        currentShow = Show.query.filter_by(show_name=show_name).all()
-        for each in currentShow:
-            if each.show_id != showId:
-                raise NotFoundError(409)
-
         if show_name is not None:
-            currentShow.show_name = show_name
+            currentShow = Show.query.filter_by(show_name=show_name.lower()).all()
+            for each in currentShow:
+                if each.show_id != showId:
+                    raise NotFoundError(409)
+        currentShow = Show.query.get(showId)
+        if show_name is not None:
+            currentShow.show_name = show_name.lower()
         if min_fare is not None:
             currentShow.min_fare = min_fare
         if duration is not None:
@@ -162,18 +173,18 @@ class ShowAPI(Resource):
 
         db.session.commit()
         currentShow = Show.query.get(showId)
-
-        st = Showtag.query.filter_by(show_id=showId)
-        for each in st:
-            db.session.delete(each)
-            db.session.commit()
-        for each in tags.split(";"):
-            st1 = Showtag(show_id=showId, tags=each).all()
-            db.session.add(st1)
-            db.session.commit()
+        if tags is not None:
+            st = Showtag.query.filter_by(show_id=showId)
+            for each in st:
+                db.session.delete(each)
+                db.session.commit()
+            for each in tags.split(";"):
+                st1 = Showtag(show_id=showId, tags=each.lower())
+                db.session.add(st1)
+                db.session.commit()
         return {
             "show_id": currentShow.show_id,
-            "show_name": currentShow.show_name,
+            "show_name": currentShow.show_name.capitalize(),
             "min_fare": currentShow.min_fare,
             "duration": currentShow.duration,
             "is3d": currentShow.is3d,

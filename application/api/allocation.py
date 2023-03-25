@@ -129,10 +129,10 @@ def generateResult(alloc):
     curVenue = Venue.query.get(alloc.venue_id)
     inner = {}
     inner['alloc_id'] = alloc.sv_id
-    inner['show_name'] = curShow.show_name
-    inner['venue_name'] = curVenue.venue_name
-    inner['venue_location'] = curVenue.location
-    inner['time'] = alloc.time.strftime("%Y-%m-%d %H:%M")
+    inner['show_name'] = curShow.show_name.capitalize()
+    inner['venue_name'] = curVenue.venue_name.capitalize()
+    inner['venue_location'] = curVenue.location.capitalize()
+    inner['time'] = alloc.time.strftime("%Y-%m-%d %I:%M %p")
     return (inner)
 
 
@@ -153,9 +153,9 @@ class AllocationAPI(Resource):
         venue_location = args.get("venue_location", None)
         time = args.get("time", None)
 
-        curShow = Show.query.filter_by(show_name=show_name).first()
-        curVenue = Venue.query.filter_by(venue_name=venue_name,
-                                         location=venue_location).first()
+        curShow = Show.query.filter_by(show_name=show_name.lower()).first()
+        curVenue = Venue.query.filter_by(venue_name=venue_name.lower(),
+                                         location=venue_location.lower()).first()
         if not curShow:
             raise BuisnessValidationError(400, "ALLOC004",
                                           "Show name not Found")
@@ -193,13 +193,13 @@ class AllocationAPI(Resource):
         if show_name is None:
             curShow = Show.query.get(currentalloc.show_id)
         else:
-            curShow = Show.query.filter_by(show_name=show_name).first()
+            curShow = Show.query.filter_by(show_name=show_name.lower()).first()
 
         if venue_name is None:
             curVenue = Venue.query.get(currentalloc.venue_id)
         else:
-            curVenue = Venue.query.filter_by(venue_name=venue_name,
-                                             location=venue_location).first()
+            curVenue = Venue.query.filter_by(venue_name=venue_name.lower(),
+                                             location=venue_location.lower()).first()
         if not curShow:
             raise BuisnessValidationError(400, "ALLOC004",
                                           "Show name not Found")
@@ -213,7 +213,7 @@ class AllocationAPI(Resource):
 
         if show_name is not None: currentalloc.show_id = curShow.show_id
         if venue_name is not None: currentalloc.venue_id = curVenue.venue_id
-        if time is not None: currentalloc.show_id = generatedateTime(time)
+        if time is not None: currentalloc.time = generatedateTime(time)
 
         db.session.commit()
         curAlloc = ShowVenue.query.get(allocId)

@@ -37,20 +37,21 @@
     </div>
     <div style="margin-left: 1%;" class="container">
         <form method="post" id="allocation">
-            <label for="showTime">show:</label>
-            <select id="selectShow" name="selectShow">
+            <label for="showTime">Show:</label>
+            <select id="selectShow" class="text-capitalize" name="selectShow">
                 {% for each in show%}
                 {%if myshow==each.show_name%}
-                <option value="{{each.show_id}}" selected>{{each.show_name}}</option>
+                <option value="{{each.show_id}}" class="text-capitalize" selected>{{each.show_name}}</option>
                 {%else%}
-                <option value="{{each.show_id}}">{{each.show_name}}</option>
+                <option  class="text-capitalize" value="{{each.show_id}}">{{each.show_name}}</option>
                 {%endif%}
                 {%endfor%}
             </select>
             <br>
-            <label for="showTime">showTime:</label>
-            <input type="datetime-local" id="showTime" name="showTime" value="{{sv.time}}" required>
-            <button type="submit">Allocate</button>
+            <label for="showTime">Show Time:</label>
+            <input type="datetime-local" id="showTime" name="showTime" value="{{sv.time}}" required><br>
+
+            <button  class="btn btn-primary" type="submit">Allocate</button>
         </form>
 
     </div>

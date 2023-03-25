@@ -33,7 +33,24 @@
 
 ### Venue Constraints
     There can not be two venue name with same location
-    there can be same name if location isdifferent
+    There can be same venue name if location are different
 
 #### common rules
     This application is case sensitive. please use captilized first letter and all letter in small for better usage
+
+#### Rules
+    Show name can be size from 1 to 64
+    Duration of show ca be from 30 min to 200 mins
+    Fare for show should be 50 to 300
+    Venue name can be size from 1 to 32
+    Venue location can be size from 1 to 32
+    Venue Place can be size from 1 to 32
+    Venue Capcity should between 10 to 300
+    User can book any number of ticket subject to availability
+    AdminCode should be of size 10
+    first name can be size from 1 to 32
+    last name can be size from 1 to 32
+    Phonenumber can be size from 1 to 10
+    EmailId can be size from 1 to 32
+    UserName can be size from 1 to 32
+    Password can be size from 1 to 32

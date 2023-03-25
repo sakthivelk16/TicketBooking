@@ -51,19 +51,20 @@
     <h4 style="text-align: center;">No Venue are available to assign Show. Create a new venue for allocation</h4>
     {%endif%}
     {%for each in Venue%}
-    <b>{{each.venue_name}}-{{each.location}}&emsp;</b>
+    <b class="text-capitalize">{{each.venue_name}}-{{each.location}}&emsp;</b>
     <a href="/admin/{{adminId}}/venue/{{each.venue_id}}/allocate" name="add" class="btn btn-secondary">Add New Show</a>
     <div class="row" style="margin-top: 10px">
       {%for each1 in each.shows%}
 
       <div id="small" class="col-md-3">
-        <label>{{each1.show_name}}</label><br />
-        <label>{{each1.time}}</label><br />
+        <label class="text-capitalize">Show: <b>{{each1.show_name}}</b></label><br />
+        <label>Time: {{each1.time}}</label><br />
 
         <a name="edit" href="/admin/{{adminId}}/edit/{{each1.sv_id}}">Edit</a>
+        <a name="edit" href="/admin/{{adminId}}/allocate/{{each1.sv_id}}/details">Details</a>
 
         <a name="delete"
-          onclick="return window.confirm('Deleting this Allocation, will also delete all the booking related to it. Are you sure, you want to delete it?')"
+          onclick="return window.confirm('Deleting this Allocation, will also delete all the booking related to this allocation. Are you sure, you want to delete it?')"
           href="/admin/{{adminId}}/delete/{{each1.sv_id}}">Delete</a>
       </div>
       {%endfor%}

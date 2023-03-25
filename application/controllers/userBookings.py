@@ -1,21 +1,22 @@
 from flask import flash, redirect, render_template, request, url_for
+from flask_login import current_user, login_required
 from sqlalchemy import func, label
 from models.module import *
 from flask import current_app as app
 from datetime import datetime, timedelta
 
 
-@app.route("/user/<int:userID>/bookings", methods={"GET", "POST"})
-def myBookings(userID):
-    currentUser = Users.query.get(userID)
-    userBooking = BookingDetails.query.filter_by(user_id=userID)
+@app.route("/user/bookings", methods={"GET", "POST"})
+@login_required
+def myBookings():
+    userBooking = BookingDetails.query.filter_by(user_id=current_user.user_id)
     final = []
     for eachBooking in userBooking:
         currentShowVenue = ShowVenue.query.get(eachBooking.sv_id)
         currentShow = Show.query.get(currentShowVenue.show_id)
         currentVenue = Venue.query.get(currentShowVenue.venue_id)
         rate1 = Rating.query.filter_by(
-            user_id=userID, show_id=currentShow.show_id
+            user_id=current_user.user_id, show_id=currentShow.show_id
         ).all()
 
         json = {}
@@ -24,7 +25,7 @@ def myBookings(userID):
         json["show_id"] = currentShow.show_id
         json["bookingID"] = eachBooking.booking_id  # having issue need a fix
         json["show_name"] = currentShow.show_name
-        json["time"] = currentShowVenue.time
+        json["time"] = currentShowVenue.time.strftime("%Y-%m-%d %I:%M %p")
         json["showStatus"] = (
             "completed"
             if currentShowVenue.time + timedelta(minutes=currentShow.duration)
@@ -33,14 +34,15 @@ def myBookings(userID):
         )
         final.append(json)
         json["rated"] = rate1[0].rating if len(rate1) > 0 else "notRated"
-    return render_template("user/allBooking.html", userId=userID, bookings=final)
+    return render_template("user/allBooking.html", bookings=final)
 
 
-@app.route("/user/<int:userID>/book/<int:svId>", methods={"GET", "POST"})
-def bookTicket(userID, svId):
+@app.route("/user/book/<int:svId>", methods={"GET", "POST"})
+@login_required
+def bookTicket(svId):
     if request.method == "POST":
         b1 = BookingDetails(
-            user_id=userID,
+            user_id=current_user.user_id,
             sv_id=svId,
             ticket_count=request.form["ticketCount"],
             ticket_fare=request.form["ticketrate"],
@@ -48,10 +50,10 @@ def bookTicket(userID, svId):
         db.session.add(b1)
         db.session.commit()
         flash(
-            "Your Ticket booking is successful. Visit bookings page for more details",
+            "Your Ticket booking is successful.",
             "success",
         )
-        return redirect("/user/" + str(userID) + "/home")
+        return redirect("/user/book/details/" + str(b1.booking_id))
     currentVenueShow = ShowVenue.query.get(svId)
     currentShow = Show.query.filter_by(show_id=currentVenueShow.show_id).first()
     currentVenue = Venue.query.filter_by(venue_id=currentVenueShow.venue_id).first()
@@ -97,14 +99,13 @@ def bookTicket(userID, svId):
         if currentShow.show_id in allRatings
         else "Not rated"
     )
-    return render_template(
-        "user/bookingPage.html",
-        userId=userID,
-        show=currentShow,
-        venue=currentVenue,
-        fare=fare,
-        currentVenueShow=currentVenueShow,
-        rate=rate,
-        tags=tag,
-        availabelTicket=availabelTicket,
-    )
+    json = {}
+    json["venue_name"] = currentVenue.venue_name
+    json["location"] = currentVenue.location
+    json["show_name"] = currentShow.show_name
+    json["time"] = currentVenueShow.time.strftime("%Y-%m-%d %I:%M %p")
+    json["fare"] = fare
+    json["rate"] = rate
+    json["tags"] = tag
+    json["availabelTicket"] = availabelTicket
+    return render_template("user/bookingPage.html", json=json)

@@ -19,7 +19,7 @@ def subplot():
         valu, txt = [], []
         for each in res.fetchall():
             valu.append(each[0])
-            txt.append(each[1])
+            txt.append(each[1].capitalize())
 
         plt.clf()
         plt.bar(txt, valu, color="maroon", width=0.4)
@@ -44,7 +44,7 @@ def subplot():
 
         for each in res.fetchall():
             valu.append(each[0])
-            txt.append(each[1])
+            txt.append(each[1].capitalize())
 
         plt.clf()
         plt.bar(txt, valu, color="maroon", width=0.4)
@@ -60,7 +60,7 @@ def subplot():
         valu, txt = [], []
         for each in res.fetchall():
             valu.append(each[0])
-            txt.append(each[1])
+            txt.append(each[1].capitalize())
 
         plt.clf()
         plt.bar(txt, valu, color="maroon", width=0.4)
@@ -78,7 +78,7 @@ def subplot():
         valu, txt = [], []
         for each in res.fetchall():
             valu.append(each[0])
-            txt.append(each[1])
+            txt.append(each[1].capitalize())
 
         plt.clf()
         plt.bar(txt, valu, color="maroon", width=0.4)
@@ -93,7 +93,7 @@ def subplot():
         valu, txt = [], []
         for each in res.fetchall():
             valu.append(each[0])
-            txt.append(each[1])
+            txt.append(each[1].capitalize())
 
         plt.clf()
         plt.bar(txt, valu, color="maroon", width=0.4)
@@ -113,6 +113,8 @@ def venuePlot(endQuery):
     try:
         conn = sqlite3.connect("instance/database.sqlite3")
         cur = conn.cursor()
+        
+        plt.clf()
         res = cur.execute(
             "SELECT count(*) as total_show, show_name from venue natural join show natural join show_venue where "
             + endQuery
@@ -122,7 +124,7 @@ def venuePlot(endQuery):
         valu, txt = [], []
         for each in res.fetchall():
             valu.append(each[0])
-            txt.append(each[1])
+            txt.append(each[1].capitalize())
 
 
         plt.bar(txt, valu, color="maroon", width=0.4)
@@ -139,7 +141,7 @@ def venuePlot(endQuery):
         valu, txt = [], []
         for each in res.fetchall():
             valu.append(each[0])
-            txt.append(each[1])
+            txt.append(each[1].capitalize())
 
         plt.clf()
         plt.bar(txt, valu, color="maroon", width=0.4)
@@ -156,7 +158,7 @@ def venuePlot(endQuery):
         valu, txt = [], []
         for each in res.fetchall():
             valu.append(each[0])
-            txt.append(each[1])
+            txt.append(each[1].capitalize())
 
         plt.clf()
         plt.bar(txt, valu, color="maroon", width=0.4)
@@ -174,7 +176,7 @@ def venuePlot(endQuery):
         valu, txt = [], []
         for each in res.fetchall():
             valu.append(each[0])
-            txt.append(each[1])
+            txt.append(each[1].capitalize())
 
 
         plt.clf()
@@ -192,7 +194,7 @@ def venuePlot(endQuery):
         valu, txt = [], []
         for each in res.fetchall():
             valu.append(each[0])
-            txt.append(each[1])
+            txt.append(each[1].capitalize())
 
         plt.clf()
         plt.bar(txt, valu, color="maroon", width=0.4)
@@ -216,7 +218,7 @@ def showPlot(endQuery):
         cur = conn.cursor()
 
        
-
+        plt.clf()
         res = cur.execute(
             "SELECT count(*) as total_venue, venue_name from venue natural join show natural join show_venue where "
             + endQuery
@@ -225,7 +227,7 @@ def showPlot(endQuery):
         valu, txt = [], []
         for each in res.fetchall():
             valu.append(each[0])
-            txt.append(each[1])
+            txt.append(each[1].capitalize())
 
         plt.bar(txt, valu, color="maroon", width=0.4)
         plt.xlabel("Venue Name")
@@ -241,7 +243,7 @@ def showPlot(endQuery):
         valu, txt = [], []
         for each in res.fetchall():
             valu.append(each[0])
-            txt.append(each[1])
+            txt.append(each[1].capitalize())
 
         plt.clf()
         plt.bar(txt, valu, color="maroon", width=0.4)
@@ -258,7 +260,7 @@ def showPlot(endQuery):
         valu, txt = [], []
         for each in res.fetchall():
             valu.append(each[0])
-            txt.append(each[1])
+            txt.append(each[1].capitalize())
 
         plt.clf()
         plt.bar(txt, valu, color="maroon", width=0.4)
@@ -275,7 +277,7 @@ def showPlot(endQuery):
         valu, txt = [], []
         for each in res.fetchall():
             valu.append(each[0])
-            txt.append(each[1])
+            txt.append(each[1].capitalize())
 
         plt.clf()
         plt.bar(txt, valu, color="maroon", width=0.4)
@@ -292,7 +294,7 @@ def showPlot(endQuery):
         valu, txt = [], []
         for each in res.fetchall():
             valu.append(each[0])
-            txt.append(each[1])
+            txt.append(each[1].capitalize())
 
         plt.clf()
         plt.bar(txt, valu, color="maroon", width=0.4)

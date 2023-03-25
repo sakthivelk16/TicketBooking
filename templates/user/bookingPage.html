@@ -13,11 +13,11 @@
 
 <body>
   <div style="text-align: right">
-    <a href="/user/{{userId}}/home">Home</a>
-    <a href="/user/{{userId}}/search">Search</a>
-    <a href="/user/{{userId}}/bookings">Booking</a>
-    <a href="/user/{{userId}}/profile">Profile</a>
-    <a href="/">Log out</a>
+    <a href="/user/home">Home</a>
+    <a href="/user/search">Search</a>
+    <a href="/user/bookings">Booking</a>
+    <a href="/user/profile">Profile</a>
+    <a href="/logout">Log out</a>
   </div>
   <div class="container ">
     <div class="row text-center">
@@ -33,10 +33,10 @@
       <div class="row">
         <div class="col"></div>
         <div class="col-3 p-1">
-          <span>Venue</h3>
+          <span>Venue</span>
         </div>
-        <div class="col-3 p-1">
-          <span>{{venue.venue_name}}-{{venue.location}}</span>
+        <div class="col-3 p-1 text-capitalize">
+          <span>{{json.venue_name}}-{{json.location}}</span>
         </div>
         <div class="col"></div>
       </div>
@@ -45,8 +45,8 @@
         <div class="col-3 p-1">
           <label>Show</label>
         </div>
-        <div class="col-3 p-1">
-          <label>{{show.show_name}}</label>
+        <div class="col-3 p-1 text-capitalize">
+          <label>{{json.show_name}}</label>
         </div>
         <div class="col"></div>
       </div>
@@ -55,8 +55,18 @@
         <div class="col-3 p-1">
           <label>Show Time</label>
         </div>
+        <div class="col-3 p-1 ">
+          <label>{{json.time}}</label>
+        </div>
+        <div class="col"></div>
+      </div>
+      <div class="row">
+        <div class="col"></div>
         <div class="col-3 p-1">
-          <label>{{currentVenueShow.time}}</label>
+          <label>Tags</label>
+        </div>
+        <div class="col-3 p-1 text-capitalize">
+          <label>{{json.tags}}</label>
         </div>
         <div class="col"></div>
       </div>
@@ -66,7 +76,7 @@
           <label>Rating</label>
         </div>
         <div class="col-3 p-1">
-          <label>{{rate}}</label>
+          <label>{{json.rate}}</label>
         </div>
         <div class="col"></div>
       </div>
@@ -76,7 +86,7 @@
           <label id="AvailableTicket">Available ticket</label><br />
         </div>
         <div class="col-3 p-1">
-          <label>{{availabelTicket}}</label>
+          <label>{{json.availabelTicket}}</label>
         </div>
         <div class="col"></div>
       </div>
@@ -86,7 +96,7 @@
           <label>Fare per Ticket</label>
         </div>
         <div class="col-3 p-1">
-          <input type="number" style="background-color: gainsboro;" name="ticketrate" id="ticketrate" value="{{fare}}"
+          <input type="number" style="background-color: gainsboro;" name="ticketrate" id="ticketrate" value="{{json.fare}}"
             readonly /><br />
         </div>
         <div class="col"></div>
@@ -97,7 +107,7 @@
           <label>No. of Tickets</label>
         </div>
         <div class="col-3 p-1">
-          <input type="number" name="ticketCount" id="ticketCount" min="1" max="{{availabelTicket}}"
+          <input type="number" name="ticketCount" id="ticketCount" min="1" max="{{json.availabelTicket}}"
             onblur="calculateTotal()" /><br>
         </div>
         <div class="col"></div>

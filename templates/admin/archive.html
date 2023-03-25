@@ -51,18 +51,18 @@
 
     {%for each in Venue%}
     {% if each.shows|length >0 %}
-    <b>{{each.venue_name}}-{{each.location}}&emsp;</b>
+    <b class="text-capitalize">{{each.venue_name}}-{{each.location}}&emsp;</b>
 
     <div class="row" style="margin-top: 10px">
       {%for each1 in each.shows%}
 
       <div id="small" class="col-md-3">
-        <label>{{each1.show_name}}</label><br />
+        <label class="text-capitalize">{{each1.show_name}}</label><br />
         <label>{{each1.time}}</label><br />
 
 
         <a name="delete"
-          onclick="return window.confirm('Deleting this Allocation, will also delete all the booking related to it. Are you sure, you want to delete it?')"
+          onclick="return window.confirm('Deleting this Allocation, will also delete all the booking related to this allocation. Are you sure, you want to delete it?')"
           href="/admin/{{adminId}}/delete/{{each1.sv_id}}">Delete</a>
       </div>
       {%endfor%}

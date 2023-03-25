@@ -17,10 +17,10 @@ def generateResult(alloc):
         curVenue = Venue.query.get(each.venue_id)
         inner = {}
         inner['alloc_id'] = each.sv_id
-        inner['show_name'] = curShow.show_name
-        inner['venue_name'] = curVenue.venue_name
-        inner['venue_location'] = curVenue.location
-        inner['time'] = each.time.strftime("%Y-%m-%d %H:%M")
+        inner['show_name'] = curShow.show_name.capitalize()
+        inner['venue_name'] = curVenue.venue_name.capitalize()
+        inner['venue_location'] = curVenue.location.capitalize()
+        inner['time'] = each.time.strftime("%Y-%m-%d %I:%M %p")
         final.append(inner)
     return final
 

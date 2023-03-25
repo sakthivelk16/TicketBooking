@@ -23,10 +23,10 @@
     crossorigin="anonymous"
   ></script>
     <div style="text-align: right">
-      <a href="/user/{{userId}}/home">Home</a>
-      <a href="/user/{{userId}}/bookings">Booking</a>
-      <a href="/user/{{userId}}/profile">Profile</a>
-      <a href="/">Log out</a>
+      <a href="/user/home">Home</a>
+      <a href="/user/bookings">Booking</a>
+      <a href="/user/profile">Profile</a>
+      <a href="/logout">Log out</a>
     </div>
     {% for category, message in get_flashed_messages(with_categories=True) %}
 

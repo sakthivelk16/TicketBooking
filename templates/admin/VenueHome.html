@@ -54,24 +54,24 @@
       <div id="small" class="col-md-3">
         <div class="container">
           <div class="row">
-            <div class="col  text-center">
+            <div class="col  text-center text-uppercase">
               <h6>{{each.venue_name}}</h6>
             </div>
           </div>
         
           <div class="row">
-            <div class="col-md-4  ">
+            <div class="col-md-4">
               <label>Location</label><br />
             </div>
-            <div class="col ">
+            <div class="col text-capitalize">
               <label>{{each.location}}</label><br />
             </div>
           </div>
           <div class="row">
-            <div class="col-md-4  ">
+            <div class="col-md-4">
               <label>Place</label><br />
             </div>
-            <div class="col ">
+            <div class="col text-capitalize">
               <label>{{each.place}}</label><br />
             </div>
           </div>
@@ -106,10 +106,12 @@
             <div class="col ">
               <a href="/admin/{{adminId}}/venue/{{each.venue_id}}/edit">Edit</a>
             </div>
+            <div class="col ">
+              <a href="/admin/{{adminId}}/venue/{{each.venue_id}}/details">Details</a>
+            </div>
             <div class="col "></div>
             <div class="col ">
               <a href="/admin/{{adminId}}/venue/{{each.venue_id}}/delete">Delete</a>
-
             </div>
 
           </div>
@@ -117,7 +119,7 @@
       </div>
       {%endfor%}
     </div>
-    <hr />
+
 </body>
 
 </html>

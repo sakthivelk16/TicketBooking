@@ -27,12 +27,12 @@
     crossorigin="anonymous"></script>
   <div style="text-align: right">
     {%if search=='searchpage'%}
-    <a href="/user/{{userId}}/home">Home</a>
+    <a href="/user/home">Home</a>
     {%endif%}
-    <a href="/user/{{userId}}/search">Search</a>
-    <a href="/user/{{userId}}/bookings">Booking</a>
-    <a href="/user/{{userId}}/profile">Profile</a>
-    <a href="/">Log out</a>
+    <a href="/user/search">Search</a>
+    <a href="/user/bookings">Booking</a>
+    <a href="/user/profile">Profile</a>
+    <a href="/logout">Log out</a>
   </div>
   {% for category, message in get_flashed_messages(with_categories=True) %}
 
@@ -47,26 +47,70 @@
 
   <div style="margin-left: 1%">
     {% for venue in list%}
-    
-    <h3>{{venue.venue_name}}-{{venue.location}}</h3>
+
+    <h3 class="text-capitalize">{{venue.venue_name}}-{{venue.location}}</h3>
     <div class="row" style="margin-top: 10px">
       {% for show in venue.shows%}
       <div id="small" class="col-md-3">
         <form method="POST" id="ShowDetails">
-          <label>Show: {{show.show_name}}</label><br />
-          <label>Show Time: {{show.time}}</label><br />
+          <div class="row">
+            <div class="col-md-4">
+              <label>Show</label><br />
+            </div>
+            <div class="col text-capitalize">
+              <label>{{show.show_name}}</label><br />
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <label>Show Time</label><br />
+            </div>
+            <div class="col text-capitalize">
+              <label>{{show.time}}</label><br />
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <label>Movie Type</label><br />
+            </div>
+            <div class="col text-capitalize">
+              {%if show.is3d%}
+              <label>3D</label><br />
+              {%else%}
+              <label>2D</label><br />
+              {%endif%}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <label>Show Price</label><br />
+            </div>
+            <div class="col text-capitalize">
+              {%if show.is3d%}
+              <label>{{[venue.price3D, show.min_fare]|max}}</label>
+              {%else%}
+              <label>{{[venue.price2D, show.min_fare]|max}}</label>
+              {%endif%}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <label>Rating</label><br />
+            </div>
+            <div class="col text-capitalize">
+              <label>{{show.rating}}</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <label>Tags</label><br />
+            </div>
+            <div class="col text-capitalize">
+              <label>{{show.tag}}</label>
+            </div>
+          </div>
 
-          {%if show.is3d%}
-          <label>Movie Type: 3D</label><br />
-          <label>Show Price: {{[venue.price2D, show.min_fare]|max}}</label><br />
-          {%else%}
-          <label>Movie Type: 2D</label><br />
 
-          <label>Show Price: {{[venue.price2D, show.min_fare]|max}}</label><br />
-
-          {%endif%}
-          <label>Rating: {{show.rating}}</label><br />
-          <label>Tags: {{show.tag}}</label><br />
           {%if show.available_ticket==0%}
           <button type="submit" style="margin-left: 35%" disabled>Houseful</button>
 
@@ -76,6 +120,7 @@
             Book
           </button>
           {%endif%}
+
         </form>
       </div>
       {%endfor%}

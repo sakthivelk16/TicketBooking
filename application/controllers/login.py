@@ -1,4 +1,5 @@
-from flask import Flask,  redirect, render_template, request, url_for, flash
+from flask import Flask,  redirect, render_template, request, session, url_for, flash
+from flask_login import login_user
 from models.module import *
 from flask import current_app as app
 
@@ -9,7 +10,7 @@ def intialPage():
 @app.route("/user/login", methods={"GET", "POST"})
 def login():
     if request.method == "POST":
-        username = request.form['loginId']
+        username = request.form['loginId'].lower()
         password = request.form['password']
         u1 = Users.query.filter_by()
         u1 = Users.query.filter_by(username=username,
@@ -17,16 +18,16 @@ def login():
         if u1 is None:
             flash('Invalid Login details', "danger")
             return render_template("login/login.html", error=True)
-
-        return redirect("/user/" + str(u1.user_id) + "/home")
-
+        login_user(u1)
+        return redirect("/user/home")
+    session.clear()
     return render_template("login/login.html")
 
 
 @app.route("/admin/login", methods={"GET", "POST"})
 def adminLogin():
     if request.method == "POST":
-        username = request.form['loginId']
+        username = request.form['loginId'].lower()
         password = request.form['password']
         u1 = Admin.query.filter_by(username=username,
                                    password=password).first()

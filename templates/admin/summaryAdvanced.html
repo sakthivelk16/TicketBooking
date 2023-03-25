@@ -33,6 +33,7 @@
       <a href="/admin/{{adminId}}/summary">Summary</a>
       <a href="/admin/login">Log out</a>
     </div>
+    <h3>Generate summary Details</h3>
     {% for category, message in get_flashed_messages(with_categories=True) %}
   <div class="alert alert-{{category}} alert-dismissible fade show" role="alert">
     {{ message }}
@@ -42,9 +43,9 @@
     <div>
       <form method="post" id="venue_filter">
         <label for="venue">Select Venue</label>
-        <select name="venue" id="venue" required>
+        <select name="venue" id="venue" class="text-capitalize" required>
           {%for each in venue%}
-          <option value="{{each.venue_name}}-{{each.location}}">{{each.venue_name}}-{{each.location}}</option>
+          <option class="text-capitalize"  value="{{each.venue_name}}-{{each.location}}">{{each.venue_name}}-{{each.location}}</option>
           {%endfor%}</select
         ><br />
         <label for="">Filter Start Time</label>
@@ -57,11 +58,11 @@
     <hr />
     <div>
       <form method="post" id="show_filter">
-        <label for="show">Select Show</label>
+        <label  for="show">Select Show</label>
 
-        <select name="show" id="show" required>
+        <select class="text-capitalize"  name="show" id="show" required>
           {%for each in show%}
-          <option value="{{each.show_name}}">{{each.show_name}}</option>
+          <option class="text-capitalize"  value="{{each.show_name}}">{{each.show_name}}</option>
           {%endfor%}</select
         ><br />
         <label for="">Filter Start Time</label>

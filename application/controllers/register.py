@@ -6,18 +6,18 @@ from flask import current_app as app
 @app.route("/user/register", methods={"GET", "POST"})
 def register():
     if request.method == "POST":
-        fname = request.form["fname"]
-        lname = request.form["lname"]
+        fname = request.form["fname"].lower()
+        lname = request.form["lname"].lower()
         mobile = request.form["mobile"]
-        email = request.form["email"]
-        username = request.form["username"]
+        email = request.form["email"].lower()
+        username = request.form["username"].lower()
         password = request.form["password"]
         isexist = Users.query.filter_by(username=username).all()
         if len(isexist) > 0:  # verify user name exist in login table
             flash('This username is already exist. Please choose differnt one',
                   'danger')
             return render_template(
-                "userRegistration/userRegistration.html",
+                "registration/userRegistration.html",
                 first_name=fname,
                 last_name=lname,
                 phone_number=mobile,
@@ -35,23 +35,19 @@ def register():
         db.session.commit()
         flash('User Registration Successfull', 'success')
         return redirect("/")
-        return redirect("/user/register/success")
-    return render_template("userRegistration/userRegistration.html")
+    return render_template("registration/userRegistration.html")
 
 
-@app.route("/user/register/success", methods={"GET", "POST"})
-def registerSuccess():
-    return render_template("userRegistration/registrationSuccessful.html")
 
 
 @app.route("/admin/register", methods={"GET", "POST"})
 def adminRegister():
     if request.method == "POST":
-        fname = request.form["fname"]
-        lname = request.form["lname"]
+        fname = request.form["fname"].lower()
+        lname = request.form["lname"].lower()
         mobile = request.form["mobile"]
-        email = request.form["email"]
-        username = request.form["username"]
+        email = request.form["email"].lower()
+        username = request.form["username"].lower()
         password = request.form["password"]
         adminCode = request.form["code"]
         isCodeExist = Admincode.query.filter_by(admin_code=adminCode).all()
@@ -61,7 +57,7 @@ def adminRegister():
                   'danger')
             flash('If you do not have a valid code. Get from current Admin',
                   'info')
-            return render_template("userRegistration/adminRegistration.html",
+            return render_template("registration/adminRegistration.html",
                                    
                                    fname=fname,
                                    lname=lname,
@@ -75,7 +71,7 @@ def adminRegister():
             flash('This username is already exist. Please choose differnt one',
                   'danger')
             return render_template(
-                "userRegistration/adminRegistration.html",
+                "registration/adminRegistration.html",
                 fname=fname,
                 lname=lname,
                 mobile=mobile,
@@ -93,12 +89,7 @@ def adminRegister():
         db.session.commit()
         flash('Admin Registration Successfull', 'success')
         return redirect("/admin/login")
-        return redirect("/admin/register/success")
     flash('If you do not have a valid code. Get from current Admin',
                   'info')
-    return render_template("userRegistration/adminRegistration.html")
+    return render_template("registration/adminRegistration.html")
 
-
-@app.route("/admin/register/success", methods={"GET", "POST"})
-def adminRegisterSuccess():
-    return render_template("userRegistration/adminRegistrationSuccessful.html")

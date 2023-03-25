@@ -51,14 +51,33 @@ def venueValidation(type):
         raise BuisnessValidationError(400, "VENUE004", "fare2D is required")
     if (fare3D is None and type == "post") or fare3D == "":
         raise BuisnessValidationError(400, "VENUE005", "fare3D is required")
+    
+    if venue_name is not None and len(venue_name)>32:
+        raise BuisnessValidationError(
+                400, "MIN_MAX_Conflict", "Venue Name length should below 32"
+            )
+    if place is not None and len(place)>32:
+        raise BuisnessValidationError(
+                400, "MIN_MAX_Conflict", "Venue place length should below 32"
+            )
+    if location is not None and len(location)>32:
+        raise BuisnessValidationError(
+                400, "MIN_MAX_Conflict", "Venue Location length should below 32"
+            )
+
     if max_capacity is not None:
         max_capacity = verifyInterger(
             max_capacity, 400, "VENUE006", "max_capacity should be integer"
         )
 
+        
         if max_capacity <= 0:
             raise BuisnessValidationError(
                 400, "VENUE007", "max_capacity should be greater than 0"
+            )
+        if max_capacity > 300 and max_capacity<10:
+            raise BuisnessValidationError(
+                400, "MIN_MAX_Conflict", "Venue capacity should be 10 to 300"
             )
     if fare2D is not None:
         fare2D = verifyInterger(fare2D, 400, "VENUE008", "2D Fare should be integer")
@@ -66,6 +85,10 @@ def venueValidation(type):
         if fare2D <= 0:
             raise BuisnessValidationError(
                 400, "VENUE009", "fare2D should be greater than 0"
+            )
+        if fare2D > 300 and fare2D<50:
+            raise BuisnessValidationError(
+                400, "MIN_MAX_Conflict", "Venue Fare should be 50 to 300"
             )
 
     if fare3D is not None:
@@ -75,6 +98,10 @@ def venueValidation(type):
             raise BuisnessValidationError(
                 400, "VENUE011", "fare3D should be greater than 0"
             )
+        if fare3D > 300 and fare3D<50:
+            raise BuisnessValidationError(
+                400, "MIN_MAX_Conflict", "Venue Fare should be 50 to 300"
+            )
 
 
 class VenueAPI(Resource):
@@ -83,9 +110,9 @@ class VenueAPI(Resource):
         if currentVenue:
             return {
                 "venue_id": currentVenue.venue_id,
-                "venue_name": currentVenue.venue_name,
-                "place": currentVenue.place,
-                "location": currentVenue.location,
+                "venue_name": currentVenue.venue_name.capitalize(),
+                "place": currentVenue.place.capitalize(),
+                "location": currentVenue.location.capitalize(),
                 "max_capacity": currentVenue.max_capacity,
                 "fare2D": currentVenue.fare2D,
                 "fare3D": currentVenue.fare3D,
@@ -104,15 +131,15 @@ class VenueAPI(Resource):
         fare3D = args.get("fare3D", None)
 
         currentVenueId = Venue.query.filter_by(
-            venue_name=venue_name, location=location
+            venue_name=venue_name.lower(), location=location.lower()
         ).first()
 
         if currentVenueId:
             raise NotFoundError(409)
         newVenue = Venue(
-            venue_name=venue_name,
-            place=place,
-            location=location,
+            venue_name=venue_name.lower(),
+            place=place.lower(),
+            location=location.lower(),
             max_capacity=max_capacity,
             fare2D=fare2D,
             fare3D=fare3D,
@@ -120,13 +147,13 @@ class VenueAPI(Resource):
         db.session.add(newVenue)
         db.session.commit()
         currentVenue = Venue.query.filter_by(
-            venue_name=venue_name, location=location
+            venue_name=venue_name.lower(), location=location.lower()
         ).first()
         return {
             "venue_id": currentVenue.venue_id,
-            "venue_name": currentVenue.venue_name,
-            "place": currentVenue.place,
-            "location": currentVenue.location,
+            "venue_name": currentVenue.venue_name.capitalize(),
+            "place": currentVenue.place.capitalize(),
+            "location": currentVenue.location.capitalize(),
             "max_capacity": currentVenue.max_capacity,
             "fare2D": currentVenue.fare2D,
             "fare3D": currentVenue.fare3D,
@@ -146,11 +173,11 @@ class VenueAPI(Resource):
         fare3D = args.get("fare3D", None)
 
         if venue_name is not None:
-            currentVenue.venue_name = venue_name
+            currentVenue.venue_name = venue_name.lower()
         if place is not None:
-            currentVenue.place = place
+            currentVenue.place = place.lower()
         if location is not None:
-            currentVenue.venue_name = location
+            currentVenue.venue_name = location.lower()
         if max_capacity is not None:
             currentVenue.max_capacity = max_capacity
         if fare2D is not None:
@@ -162,9 +189,9 @@ class VenueAPI(Resource):
         currentVenue = Venue.query.get(venueId)
         return {
             "venue_id": currentVenue.venue_id,
-            "venue_name": currentVenue.venue_name,
-            "place": currentVenue.place,
-            "location": currentVenue.location,
+            "venue_name": currentVenue.venue_name.capitalize(),
+            "place": currentVenue.place.capitalize(),
+            "location": currentVenue.location.capitalize(),
             "max_capacity": currentVenue.max_capacity,
             "fare2D": currentVenue.fare2D,
             "fare3D": currentVenue.fare3D,

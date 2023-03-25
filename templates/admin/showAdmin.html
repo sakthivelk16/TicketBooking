@@ -26,39 +26,90 @@
     <a href="/admin/{{adminId}}/home">Home</a>
     <a href="/admin/{{adminId}}/venue">Venue</a>
     <a href="/admin/{{adminId}}/profile">Profile</a>
-        <a href="/admin/{{adminId}}/summary">Summary</a>
-        <a href="/admin/login">Log out</a>
+    <a href="/admin/{{adminId}}/summary">Summary</a>
+    <a href="/admin/login">Log out</a>
   </div>
-  
-  
+
+
   {% for category, message in get_flashed_messages(with_categories=True) %}
   <div class="alert alert-{{category}} alert-dismissible fade show" role="alert">
     {{ message }}
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
   </div>
   {% endfor %}
-  
+
   <div style="text-align: center;">
     <a href="/admin/{{adminId}}/show/create" class="btn btn-primary">Create New Show</a>
 
   </div>
+
+  {% if allShow|length ==0 %}
+  <h4 style="text-align: center;">No show are Created. Create A new one</h4>
+  {%endif%}
   <div class="row" style="margin-top: 10px">
-    {% if allShow|length ==0 %}
-    <h4 style="text-align: center;">No show are Created. Create A new one</h4>
-    {%endif%}
     {%for each in allShow%}
     <div id="small" class="col-md-3">
 
-      <h6>Show Name: {{each.show_name}}</h6>
-      <label>Minimum Fare Detail: {{each.min_fare}}</label><br />
-      <label>Is 3D: {{each.is3d}}</label><br />
-      <label>Tags: {{each.tags}}</label><br />
-      <a href="/admin/{{adminId}}/show/{{each.show_id}}/edit">Edit</a>
-      <a onclick="return window.confirm('You are not allowed to delete if there is any allocation. Deleting non-allocated  Show, will also delete all the rating of Show. Are you sure, you want to delete it?')"
-        href="/admin/{{adminId}}/show/{{each.show_id}}/delete">Delete</a>
+      <div class="container">
+        <div class="row">
+          <div class="col  text-center text-uppercase">
+            <h6>{{each.show_name}}</h6>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-5">
+          <label>Tags</label><br />
+        </div>
+        <div class="col text-capitalize">
+          <label>{{each.tags}}</label><br />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-5">
+          <label>Is 3D</label><br />
+        </div>
+        <div class="col text-capitalize">
+          <label>{{each.is3d}}</label><br />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-5">
+          <label>Duration</label><br />
+        </div>
+        <div class="col text-capitalize">
+          <label>{{each.duration}}</label><br />
+        </div>
+      </div>
+      
+      <div class="row">
+        <div class="col-md-5">
+          <label>Fare Detail (min)</label><br />
+        </div>
+        <div class="col text-capitalize">
+          <label>{{each.min_fare}}</label><br />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col ">
+          <a href="/admin/{{adminId}}/show/{{each.show_id}}/edit">Edit</a>
+
+        </div>
+        <div class="col ">
+          <a href="/admin/{{adminId}}/show/{{each.show_id}}/details">Details</a>
+
+        </div>
+        <div class="col "></div>
+        <div class="col ">
+          <a onclick="return window.confirm('You are not allowed to delete if there is any allocation. Deleting non-allocated  Show, will also delete all the rating of Show. Are you sure, you want to delete it?')"
+            href="/admin/{{adminId}}/show/{{each.show_id}}/delete">Delete</a>
+
+        </div>
+      </div>
     </div>
     {%endfor%}
   </div>
+
 </body>
 
 </html>

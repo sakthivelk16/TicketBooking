@@ -1,4 +1,6 @@
+import sqlite3
 from flask import Flask, flash, redirect, render_template, request, url_for
+from application.api.allocation import generatedateTime
 from models.module import *
 from flask import current_app as app
 from datetime import datetime, timedelta
@@ -62,7 +64,7 @@ def allocation(a_id, venue_id):
                     break
         if conflict:
             flash(
-                "There is some other show blocking this time.please choose differnt time",
+                "There is some other show blocking this time. Please choose differnt time",
                 "warning",
             )
             return render_template(
@@ -162,7 +164,7 @@ def editAllocation(a_id, sv_id):
                     break
         if conflict:
             flash(
-                "There is some other show blocking this time.please choose differnt time",
+                "There is some other show blocking this time. Please choose differnt time",
                 "warning",
             )
 
@@ -186,3 +188,43 @@ def editAllocation(a_id, sv_id):
         sv=currentShowVenue,
         myshow=currentShow.show_name,
     )
+
+
+
+@app.route("/admin/<int:a_id>/allocate/<int:allocId>/details", methods={"GET", "POST"})
+def eachAllocateDetails(a_id, allocId):
+    query = "sv_id=" + str(allocId)
+
+    conn = sqlite3.connect("instance/database.sqlite3")
+    cur = conn.cursor()
+    res0 = cur.execute(
+        "SELECT * from show_venue natural join show NATURAL join venue where "
+        + query
+    )
+    z = res0.fetchone()
+
+    res = cur.execute(
+        "SELECT sum(ticket_count*ticket_fare) , sum(ticket_count) from booking_details where "
+        + query    )
+    a = res.fetchone()
+
+
+    # return 'k'
+    json = {}
+    json["show"] = z[4]
+    json["duration"] = z[6]
+    json["venue"] = z[8]
+    json["location"] = z[10]
+    json["availed"] = z[11]
+    json["time"] = generatedateTime(z[3]).strftime('%Y-%m-%d %I:%M %p')
+    if a[0]is None:
+        json["revenue"] = 0
+        json["bookedTicket"] = 0
+    else:
+        json["revenue"] = a[0]
+        json["bookedTicket"] = a[1]    
+
+    cur.close()
+    conn.close()
+    json["percent"] = round(json["bookedTicket"] / json["availed"] * 100)
+    return render_template("admin/allocDetails.html", adminId=a_id, json=json)
