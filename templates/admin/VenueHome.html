@@ -2,6 +2,9 @@
 <html>
 
 <head>
+  <header style="text-align: center">
+    <h2>Booking Application</h2>
+  </header>
   <title>Venue</title>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -46,7 +49,7 @@
     
     <a href="/admin/{{adminId}}/venue/create" class="btn btn-primary">Create New Venue</a>
     {% if allVenue|length ==0 %}
-    <h4 style="text-align: center;">No Venue are Created. Create a new one</h4>
+    <h5 style="text-align: center;">No Venue are Created. Create a new one</h5>
     {%endif%}
     <div class="row" style="margin-top: 10px">
       {%for each in allVenue%}

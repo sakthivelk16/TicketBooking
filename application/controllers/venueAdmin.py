@@ -1,9 +1,53 @@
+from datetime import datetime
 import sqlite3
-from flask import Flask, flash, session, redirect, render_template, request, url_for
+from flask import flash, session, redirect, render_template, request, url_for
+from sqlalchemy import func
 from models.module import *
 from flask import current_app as app
-from datetime import datetime
 
+
+def venueValidating(venue):
+    print(venue)
+    if venue.venue_name is None or venue.venue_name == "":
+        return (True, "Venue Name should not be empty")
+    if len(venue.venue_name) > 32:
+        return (True, "Venue Name Should be less than  or equal to 32 character")
+
+    if len(venue.place) > 32:
+        return (True, "Venue place Should be less than  or equal to 32 character")
+
+    if venue.location is None or venue.location == "":
+        return (True, "Venue location should not be empty")
+    if len(venue.location) > 32:
+        return (True, "Venue location Should be less than  or equal to 32 character")
+
+    if venue.max_capacity is None or venue.max_capacity == "":
+        return (True, "Venue max_capacity should not be empty")
+    try:
+        int(venue.max_capacity)
+    except ValueError:
+        return (True, "max_capacity should be not include any charcter")
+    if int(venue.max_capacity) < 10 or int(venue.max_capacity) > 300:
+        return (True, "max_capacity should between 10 and 300")
+
+    if venue.fare2D is None or venue.fare2D == "":
+        return (True, "Venue fare2D should not be empty")
+    try:
+        int(venue.fare2D)
+    except ValueError:
+        return (True, "fare2D should be not include any charcter")
+    if int(venue.fare2D) < 50 or int(venue.fare2D) > 300:
+        return (True, "fare2D should between 50 and 300")
+
+    if venue.fare3D is None or venue.fare3D == "":
+        return (True, "Venue fare3D should not be empty")
+    try:
+        int(venue.fare3D)
+    except ValueError:
+        return (True, "fare3D should be not include any charcter")
+    if int(venue.fare3D) < 50 or int(venue.fare2D) > 300:
+        return (True, "fare3D should between 50 and 300")
+    return (False, None)
 
 
 @app.route("/admin/<int:a_id>/venue/create", methods={"GET", "POST"})
@@ -36,6 +80,11 @@ def venueCreate(a_id):
             fare2D=fare2D,
             fare3D=fare3D,
         )
+        validateResult = venueValidating(v1)
+        if validateResult[0]:
+            flash(validateResult[1], "warning")
+            return render_template("admin/createVenue.html", adminId=a_id, venue=venue)
+
         db.session.add(v1)
         db.session.commit()
         return redirect("/admin/" + str(a_id) + "/venue")
@@ -70,6 +119,21 @@ def deleteVenue(a_id, venue_id):
 
 @app.route("/admin/<int:a_id>/venue/<int:venueId>/edit", methods={"GET", "POST"})
 def editVenue(a_id, venueId):
+    currentVenue = Venue.query.get(venueId)
+    sv_idd = ShowVenue.query.filter(
+        ShowVenue.venue_id == venueId, ShowVenue.time > datetime.now()
+    ).all()
+    y = [x.sv_id for x in sv_idd]
+    res = (
+        BookingDetails.query.filter(BookingDetails.sv_id.in_(y))
+        .with_entities(
+            func.sum(BookingDetails.ticket_count).label("total"), BookingDetails.sv_id
+        )
+        .group_by(BookingDetails.sv_id)
+        .all()
+    )
+    z = ([s[0] for s in res])
+    z=max(z,default=10)
     if request.method == "POST":
         name = request.form["venue_name"].lower()
         place = request.form["place"].lower()
@@ -82,14 +146,27 @@ def editVenue(a_id, venueId):
             Venue.location == location,
             Venue.venue_id != venueId,
         ).all()
-
         if len(venue1) > 0:
             flash("This Venue already present in location", "danger")
             flash(
                 "Venue name should be unique in one location. (ie)Venue name and location combination should be unique",
                 "info",
             )
-            return render_template("admin/createVenue.html", adminId=a_id, venue=request.form)
+            return render_template(
+                "admin/createVenue.html", adminId=a_id, venue=request.form
+            )
+        if int(capacity) < int(z):
+            flash(
+                "A particular show has "
+                + str(z)
+                + " bookin. So capacity cannot updated below "
+                + str(z)
+                + " until show completes",
+                "warning",
+            )
+            return render_template(
+                "admin/createVenue.html", adminId=a_id, venue=request.form
+            )
         v1 = Venue.query.get(venueId)
         v1.venue_name = name.lower()
         v1.place = place.lower()
@@ -97,12 +174,19 @@ def editVenue(a_id, venueId):
         v1.max_capacity = capacity
         v1.fare2D = fare2D
         v1.fare3D = fare3D
-        # db.session.add(v1)
+        validateResult = venueValidating(v1)
+        if validateResult[0]:
+            flash(validateResult[1], "warning")
+            return render_template(
+                "admin/createVenue.html", adminId=a_id, venue=request.form
+            )
+
         db.session.commit()
         return redirect("/admin/" + str(a_id) + "/venue")
-    currentVenue = Venue.query.get(venueId)
 
-    return render_template("admin/createVenue.html", adminId=a_id, venue=currentVenue)
+    return render_template(
+        "admin/createVenue.html", adminId=a_id, venue=currentVenue, mini=z
+    )
 
 
 @app.route("/admin/<int:a_id>/venue/<int:venueId>/details", methods={"GET", "POST"})
@@ -130,8 +214,12 @@ def eachvenueDetails(a_id, venueId):
     )
     z = res0.fetchone()
     if z[0] is None:
-        error["ERROR"] = "THIS VENUE HAS NO ALLOCATION"
-        return render_template("admin/showDetails.html", adminId=a_id, json=error)
+        if text == "Unfiltered Venue Details":
+            error["ERROR"] = "THIS VENUE HAS NO ALLOCATION"
+            return render_template("admin/venueDetails.html", adminId=a_id, json=error)
+        else:
+            error["ERROR1"] = "THIS VENUE DOES NOT HAVE ALLOCATION WITH FILTERED TIME"
+            return render_template("admin/venueDetails.html", adminId=a_id, json=error)
     json = {}
     json["availed"] = z[0]
 

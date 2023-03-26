@@ -28,14 +28,7 @@ def subplot():
         plt.title("Venue with Highest Collection")
         plt.savefig("static/venueCollection.png")
 
-        # if val=="maxPercentBooking":
-        # # Show with maximum percent of booking in particular venue
-        #     a = cur.execute(
-        #     'SELECT sum(ticket_count)/(max_capacity*1.0) as percent_book,time,show_name,venue_name,sv_id from booking_details natural join show_venue natural join venue natural join show  group by sv_id having time between "2023-03-18 00:00:00" and "2023-03-18 23:59:59"and venue_name="abc" order by percent_book desc '
-        # )
-
-        # if val == 'byRating':
-        # average rating of each show
+       
 
         res = cur.execute(
             "SELECT avg(rating),show_name from rating natural JOIN show group by show_id limit 5"
@@ -73,7 +66,7 @@ def subplot():
         # each show revenue
 
         res = cur.execute(
-            "SELECT total(totalprice),show_name from(SELECT ticket_count*ticket_fare as totalprice,show_name from booking_details natural join show_venue natural join show) group By(show_name) limit 5;"
+            "SELECT total(totalprice) as tp,show_name from(SELECT ticket_count*ticket_fare as totalprice,show_name from booking_details natural join show_venue natural join show) group By(show_name) order by tp desc limit 5;"
         )
         valu, txt = [], []
         for each in res.fetchall():
@@ -92,7 +85,7 @@ def subplot():
         )
         valu, txt = [], []
         for each in res.fetchall():
-            valu.append(each[0])
+            valu.append(each[0]*100)
             txt.append(each[1].capitalize())
 
         plt.clf()
@@ -175,7 +168,7 @@ def venuePlot(endQuery):
         )
         valu, txt = [], []
         for each in res.fetchall():
-            valu.append(each[0])
+            valu.append(each[0]*100)
             txt.append(each[1].capitalize())
 
 
@@ -193,7 +186,7 @@ def venuePlot(endQuery):
         )
         valu, txt = [], []
         for each in res.fetchall():
-            valu.append(each[0])
+            valu.append(each[0]*100)
             txt.append(each[1].capitalize())
 
         plt.clf()
@@ -276,7 +269,7 @@ def showPlot(endQuery):
         )
         valu, txt = [], []
         for each in res.fetchall():
-            valu.append(each[0])
+            valu.append(each[0]*100)
             txt.append(each[1].capitalize())
 
         plt.clf()
@@ -293,7 +286,7 @@ def showPlot(endQuery):
         )
         valu, txt = [], []
         for each in res.fetchall():
-            valu.append(each[0])
+            valu.append(each[0]*100)
             txt.append(each[1].capitalize())
 
         plt.clf()

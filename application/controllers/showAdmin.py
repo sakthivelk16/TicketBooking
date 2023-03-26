@@ -1,8 +1,35 @@
 import sqlite3
-from flask import Flask, flash, session, redirect, render_template, request, url_for
+from flask import  flash, session, redirect, render_template, request, url_for
 from models.module import *
 from flask import current_app as app
-from datetime import datetime, timedelta
+from datetime import  timedelta
+
+
+def showValidating(show):
+    if show.show_name is None or show.show_name == "":
+        return (True, "show Name should not be empty")
+    if len(show.show_name) > 64:
+        return (True, "show Name Should be less than  or equal to 64 character")
+
+    if show.duration is None or show.duration == "":
+        return (True, "show duration should not be empty")
+    try:
+        int(show.duration)
+    except ValueError:
+        return (True, "duration should be not include any charcter")
+    if int(show.duration) < 30 or int(show.duration) > 200:
+        return (True, "max_capacity should between 30 and 200")
+
+    if show.min_fare is None or show.min_fare == "":
+        return (True, "show min_fare should not be empty")
+    try:
+        int(show.min_fare)
+    except ValueError:
+        return (True, "min_fare should be not include any charcter")
+    if int(show.min_fare) < 50 or int(show.min_fare) > 300:
+        return (True, "min_fare should between 50 and 300")
+
+    return (False,None)
 
 
 @app.route("/admin/<int:a_id>/show/create", methods={"GET", "POST"})
@@ -25,20 +52,26 @@ def showCreate(a_id):
         tags = request.form["tags"].lower()
         duration = request.form["duration"]
         price = request.form["price"]
-        is3D = False
+        is3D = True if "is3D" in request.form else False
 
-        if "is3D" in request.form:
-            is3D = True
         s1 = Show(show_name=name, min_fare=price, is3d=is3D, duration=duration)
+        validateResult = showValidating(s1)
+        if validateResult[0]:
+            flash(validateResult[1], "warning")
+            return render_template("admin/createShow.html", adminId=a_id, show=showjson)
+        if tags is None or tags == "":
+            flash("Tags dhould not be empty", "warning")
+            return render_template("admin/createShow.html", adminId=a_id, show=showjson)
         db.session.add(s1)
         db.session.commit()
         show1 = Show.query.filter_by(
             show_name=name.lower(), min_fare=price, is3d=is3D
         ).first()
         for each in tags.split(";"):
-            st1 = Showtag(show_id=show1.show_id, tags=each.lower())
-            db.session.add(st1)
-            db.session.commit()
+            if each !='':
+                st1 = Showtag(show_id=show1.show_id, tags=each.lower())
+                db.session.add(st1)
+                db.session.commit()
         return redirect("/admin/" + str(a_id) + "/show")
     show = {}
     return render_template("admin/createShow.html", adminId=a_id, show=show)
@@ -154,15 +187,32 @@ def editShow(a_id, showId):
         s1.duration = showjson["duration"]
         s1.is3d = showjson["is3D"]
         # db.session.add(s1)
+        validateResult = showValidating(s1)
+        if validateResult[0]:
+            flash(validateResult[1], "warning")
+            return render_template(
+                "admin/createShow.html",
+                adminId=a_id,
+                show=showjson,
+            )
+        if showjson["tags"] is None or showjson["tags"] == "":
+            flash("Tags should not be empty", "warning")
+            return render_template(
+                "admin/createShow.html",
+                adminId=a_id,
+                show=showjson,
+            )
+
         db.session.commit()
         st = Showtag.query.filter_by(show_id=showId)
         for each in st:
             db.session.delete(each)
             db.session.commit()
         for each in showjson["tags"].split(";"):
-            st1 = Showtag(show_id=showId, tags=each.lower())
-            db.session.add(st1)
-            db.session.commit()
+            if each !='':
+                st1 = Showtag(show_id=showId, tags=each.lower())
+                db.session.add(st1)
+                db.session.commit()
         return redirect("/admin/" + str(a_id) + "/show")
     currentShow = Show.query.get(showId)
     alltags = Showtag.query.filter_by(show_id=showId).all()
@@ -203,8 +253,12 @@ def eachShowDetails(a_id, showId):
     )
     z = res0.fetchone()
     if z[0] is None:
-        error["ERROR"] = "THIS SHOW DOES NOT HAVE ALLOCATION"
-        return render_template("admin/showDetails.html", adminId=a_id, json=error)
+        if text == "Unfiltered Show Details":
+            error["ERROR"] = "THIS SHOW DOES NOT HAVE ALLOCATION"
+            return render_template("admin/showDetails.html", adminId=a_id, json=error)
+        else:
+            error["ERROR1"] = "THIS SHOW DOES NOT HAVE ALLOCATION WITH FILTERED TIMEW"
+            return render_template("admin/showDetails.html", adminId=a_id, json=error)
     json = {}
     json["availed"] = z[0]
 
@@ -219,7 +273,6 @@ def eachShowDetails(a_id, showId):
         + " group by show_name;"
     )
     a = res.fetchone()
-    print(a)
     if a is None:
         json["warn"] = "No Booking made for this show with details above"
         json["revenue"] = 0

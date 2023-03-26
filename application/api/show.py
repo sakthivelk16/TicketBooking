@@ -133,9 +133,10 @@ class ShowAPI(Resource):
         db.session.commit()
         currentShow = Show.query.filter_by(show_name=show_name.lower()).first()
         for each in tags.split(";"):
-            eachShowTag = Showtag(show_id=currentShow.show_id, tags=each.lower())
-            db.session.add(eachShowTag)
-            db.session.commit()
+            if each!='':
+                eachShowTag = Showtag(show_id=currentShow.show_id, tags=each.lower())
+                db.session.add(eachShowTag)
+                db.session.commit()
         return {
             "show_id": currentShow.show_id,
             "show_name": currentShow.show_name.capitalize(),
@@ -179,9 +180,10 @@ class ShowAPI(Resource):
                 db.session.delete(each)
                 db.session.commit()
             for each in tags.split(";"):
-                st1 = Showtag(show_id=showId, tags=each.lower())
-                db.session.add(st1)
-                db.session.commit()
+                if each !='':
+                    st1 = Showtag(show_id=showId, tags=each.lower())
+                    db.session.add(st1)
+                    db.session.commit()
         return {
             "show_id": currentShow.show_id,
             "show_name": currentShow.show_name.capitalize(),

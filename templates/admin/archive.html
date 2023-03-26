@@ -2,6 +2,9 @@
 <html>
 
 <head>
+  <header style="text-align: center">
+    <h2>Booking Application</h2>
+  </header>
   <title>Archive</title>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -46,7 +49,7 @@
 
   <div style="margin-left: 5%">
     {% if total ==0 %}
-    <h4 style="text-align: center;">No Show is completed. If any show completed it will displayed in this page</h4>
+    <h5 style="text-align: center;">No Show is completed. If any show completed it will displayed in this page</h5>
     {%else%}
 
     {%for each in Venue%}
@@ -60,7 +63,7 @@
         <label class="text-capitalize">{{each1.show_name}}</label><br />
         <label>{{each1.time}}</label><br />
 
-
+        <a name="details" href="/admin/{{adminId}}/allocate/{{each1.sv_id}}/details">Details</a>
         <a name="delete"
           onclick="return window.confirm('Deleting this Allocation, will also delete all the booking related to this allocation. Are you sure, you want to delete it?')"
           href="/admin/{{adminId}}/delete/{{each1.sv_id}}">Delete</a>

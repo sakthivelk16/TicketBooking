@@ -20,7 +20,6 @@ def login():
             return render_template("login/login.html", error=True)
         login_user(u1)
         return redirect("/user/home")
-    session.clear()
     return render_template("login/login.html")
 
 

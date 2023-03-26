@@ -7,6 +7,9 @@
 </style>
 
 <head>
+  <header style="text-align: center">
+    <h2>Booking Application</h2>
+  </header>
   <title>BookDetails</title>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -65,10 +68,17 @@
     {{ json.ERROR }}
   </div>
   {%else%}
+  {% if 'ERROR1' in json%}
+  <div class="alert alert-danger text-center">
+    {{ json.ERROR1 }}
+  </div>
+  {%endif%}
   <form method="post">
-    <div class="alert alert-info text-center">
+  {% if 'ERROR1'  not in json%}
+  <div class="alert alert-info text-center">
       {{ json.text }}
     </div>
+    {%endif%}
     {% if 'warn' in json%}
   <div class="alert alert-danger text-center">
     {{ json.warn }}
@@ -96,7 +106,8 @@
       <div class="col"></div>
     </div>
   </form>
-  <h1 style="text-align: center">Venue Details</h1>
+  {% if 'ERROR1'  not in json%}
+  <h5 style="text-align: center">Venue Details</h5>
   <table class="styled-table" style="margin-left: auto; margin-right: auto">
     <tr>
       <th>Venue Name</th>
@@ -131,6 +142,7 @@
     </tr>
 
   </table>
+  {%endif%}
   {%endif%}
 </body>
 

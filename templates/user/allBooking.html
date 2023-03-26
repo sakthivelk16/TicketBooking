@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html>
   <head>
+  <header style="text-align: center">
+    <h2>Booking Application</h2>
+  </header>
   <title>AllBooking</title>
   <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -37,7 +40,7 @@
       <a href="/logout">Log out</a>
     </div>
     {% if bookings|length ==0 %}
-    <h4 style="text-align: center;">You did not book any ticket yet. You booked ticket will be available here</h4>
+    <h5 style="text-align: center;">You did not book any ticket yet. You booked ticket will be available here</h5>
     {%else%}
   
     <div style="margin-left: 1%" class="container">

@@ -2,6 +2,9 @@
 <html>
 
 <head>
+  <header style="text-align: center">
+    <h2>Booking Application</h2>
+  </header>
   <title>UserHome</title>
 
   <meta charset="utf-8" />
@@ -42,13 +45,13 @@
   </div>
   {% endfor %}
   {% if list|length ==0 %}
-  <h4 style="text-align: center;">No Show is available for booking. Please come back Later</h4>
+  <h5 style="text-align: center;">No Show is available for booking. Please come back Later</h5>
   {%endif%}
 
   <div style="margin-left: 1%">
     {% for venue in list%}
 
-    <h3 class="text-capitalize">{{venue.venue_name}}-{{venue.location}}</h3>
+    <h5 class="text-capitalize">{{venue.venue_name}}-{{venue.location}}</h5>
     <div class="row" style="margin-top: 10px">
       {% for show in venue.shows%}
       <div id="small" class="col-md-3">
@@ -111,7 +114,7 @@
           </div>
 
 
-          {%if show.available_ticket==0%}
+          {%if show.available_ticket<=0%}
           <button type="submit" style="margin-left: 35%" disabled>Houseful</button>
 
           {%else%}

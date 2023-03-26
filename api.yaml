@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: Ticket Booking Application
   description: |
-    <h3> Error Codes </h3>  <table>
+    </h5> Error Codes </h5>  <table>
       <thead>
         <th>Resource</th>
         <th>Error Code</th>

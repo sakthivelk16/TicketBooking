@@ -3,6 +3,9 @@
 <html>
 
 <head>
+  <header style="text-align: center">
+    <h2>Booking Application</h2>
+  </header>
   <title>UserRegistration</title>
 
   <meta charset="utf-8" />
@@ -30,13 +33,13 @@
   </div>
 
   {% endfor %}
-  <h1>User Registration</h1>
+  <h5>User Registration</h5>
   <form method="POST" id="user-details">
     <div class="mb-3">
       <div class="form-group row">
         <label for="fname" class="col-sm-2 col-form-label">First Name</label>
         <div class="col-sm-5">
-          <input name="fname" class="rounded" type="text" maxlength="32" pattern="[a-zA-Z\s]+"
+          <input name="fname" class="rounded text-capitalize" type="text" maxlength="32" pattern="[a-zA-Z\s]+"
             title="Only Space and alphabets are allowed" required value="{{fname}}" />
         </div>
       </div>
@@ -46,7 +49,7 @@
       <div class="form-group row">
         <label for="lname" class="col-sm-2 col-form-label">Last Name</label>
         <div class="col-sm-5">
-          <input name="lname" class="rounded" type="text" maxlength="32" required pattern="[a-zA-Z\s]+"
+          <input name="lname" class="rounded" type="text text-capitalize" maxlength="32" required pattern="[a-zA-Z\s]+"
             title="Only Space and alphabets are allowed" value="{{lname}}" id="lname" />
         </div>
       </div>
@@ -56,7 +59,7 @@
       <div class="form-group row">
         <label for="mobile" class="col-sm-2 col-form-label">Phone Number</label>
         <div class="col-sm-5">
-          <input name="mobile" type="text" class="rounded" maxlength="10" pattern="[0-9]{10}" title="Enter 10 digits"
+          <input name="mobile" type="text" class="rounded"  maxlength="10" pattern="[0-9]{10}" title="Enter 10 digits"
             value="{{mobile}}" id="mobile" />
         </div>
       </div>
@@ -75,7 +78,7 @@
       <div class="form-group row">
         <label for="username" class="col-sm-2 col-form-label">UserName</label>
         <div class="col-sm-5">
-          <input name="username" type="text" maxlength="32" class="rounded" pattern="[a-zA-Z0-9]+"
+          <input name="username" type="text" minlength="3" maxlength="32" class="rounded" pattern="[a-zA-Z0-9]+"
             title="Only alphabets and numbers are allowed" value="{{username}}" required id="username" />
         </div>
       </div>

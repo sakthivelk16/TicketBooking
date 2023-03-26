@@ -34,6 +34,11 @@ def adminPassword(adminId):
             return render_template(
                 "resetPassword.html", username=user.username, userId=adminId, admin=True
             )
+        if len(request.form["password"]) < 8 or len(request.form["password"]) > 32:
+            flash("Password should be 8 to 32 character", "warning")
+            return render_template(
+                "resetPassword.html", username=user.username, userId=adminId, admin=True
+            )
         user.password = request.form["newpassword"]
         db.session.commit()
         return redirect("/admin/" + str(adminId) + "/profile")

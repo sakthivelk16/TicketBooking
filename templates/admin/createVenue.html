@@ -7,6 +7,9 @@
 </style>
 
 <head>
+  <header style="text-align: center">
+    <h2>Booking Application</h2>
+  </header>
   <title>CreateVenue</title>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -36,10 +39,11 @@
   {%endfor%}
   
   {% if not venue.venue_name%}
-  <h1 style="text-align: center">Create New Venue</h1>
+  <h5 style="text-align: center">Create New Venue</h5>
   {%else%}
-  <h1 style="text-align: center">Edit Venue</h1>
+  <h5 style="text-align: center">Edit Venue</h5>
   {% endif%}
+  {%if not mini%} {%set mini=10%}{%endif%}
   <form method="POST" id="createvenue">
     <div class="mb-3">
       <label for="name" class="form-label">Venue Name</label>      
@@ -48,9 +52,9 @@
       <label for="place" class="form-label">Place</label>
       <input type="text" class="form-control text-capitalize" maxlength="32" name="place" value="{{venue.place}}" />
       <label for="location" class="form-label">Location</label>
-      <input type="text" class="form-control text-capitalize" maxlength="32" name="location" value="{{venue.location}}" />
+      <input type="text" class="form-control text-capitalize" maxlength="32" name="location" value="{{venue.location}}" required />
       <label for="capacity" class="form-label">Capacity</label>
-      <input type="number" min="10" max="300" class="form-control" name="max_capacity" value="{{venue.max_capacity}}" required />
+      <input type="number" min="{{[mini,10]|max}}" max="300" class="form-control"  name="max_capacity" value="{{venue.max_capacity}}" required />
       <label for="fare2D" class="form-label">Fare 2D</label>
       <input type="number" min="50" max="300" class="form-control" name="fare2D" value="{{venue.fare2D}}" required />
       <label for="fare3D" class="form-label">Fare 3D</label>

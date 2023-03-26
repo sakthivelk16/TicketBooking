@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html>
   <head>
+  <header style="text-align: center">
+    <h2>Booking Application</h2>
+  </header>
   <title>SummaryFilter</title>
   <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -33,7 +36,7 @@
       <a href="/admin/{{adminId}}/summary">Summary</a>
       <a href="/admin/login">Log out</a>
     </div>
-    <h3>Generate summary Details</h3>
+    <h5>Generate summary Details</h5>
     {% for category, message in get_flashed_messages(with_categories=True) %}
   <div class="alert alert-{{category}} alert-dismissible fade show" role="alert">
     {{ message }}

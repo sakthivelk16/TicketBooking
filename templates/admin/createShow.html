@@ -7,6 +7,9 @@
 </style>
 
 <head>
+  <header style="text-align: center">
+    <h2>Booking Application</h2>
+  </header>
   <title>CreateShow</title>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -35,9 +38,9 @@
   </div>
   {%endfor%} 
   {% if not show.name%}
-  <h1 style="text-align: center">Create New Show</h1>
+  <h5 style="text-align: center">Create New Show</h5>
   {%else%}
-  <h1 style="text-align: center">Edit Show</h1>
+  <h5 style="text-align: center">Edit Show</h5>
   {% endif%}
   <form method="POST" id="createShow">
     <div class="mb-3">
@@ -46,7 +49,7 @@
 
       <label for="tags" class="form-label">Tags</label>
       <input type="text" class="form-control text-capitalize" name="tags" required value="{{show.tags}}"
-        placeholder="In case of multiple tags. Add tags with semicolon" />
+        placeholder="In case of multiple tags. Add tags with semicolon" pattern="[a-zA-Z;]" />
       <label for="duration" class="form-label">Duration (in mins)</label>
       <input type="number" min="30" placeholder="duration must between 29 and 201" max="200" class="form-control"
         name="duration" required value="{{show.duration}}" />

@@ -7,6 +7,9 @@
 </style>
 
 <head>
+  <header style="text-align: center">
+    <h2>Booking Application</h2>
+  </header>
   <title>BookDetails</title>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -48,11 +51,11 @@
     crossorigin="anonymous"></script>
   <div style="text-align: right">
     <a href="/admin/{{adminId}}/home">Home</a>
-      <a href="/admin/{{adminId}}/venue">Venue</a>
-      <a href="/admin/{{adminId}}/show">Show</a>
-      <a href="/admin/{{adminId}}/profile">Profile</a>
-      <a href="/admin/{{adminId}}/summary">Summary</a>
-      <a href="/admin/login">Log out</a>
+    <a href="/admin/{{adminId}}/venue">Venue</a>
+    <a href="/admin/{{adminId}}/show">Show</a>
+    <a href="/admin/{{adminId}}/profile">Profile</a>
+    <a href="/admin/{{adminId}}/summary">Summary</a>
+    <a href="/admin/login">Log out</a>
   </div>
   {% for category, message in get_flashed_messages(with_categories=True) %}
   <div class="alert alert-{{category}} alert-dismissible fade show" role="alert">
@@ -65,15 +68,24 @@
     {{ json.ERROR }}
   </div>
   {%else%}
+  {% if 'ERROR1' in json%}
+  <div class="alert alert-danger text-center">
+    {{ json.ERROR1 }}
+  </div>
+  {%endif%}
   <form method="post">
+  {% if 'ERROR1'  not in json%}
+
     <div class="alert alert-info text-center">
       {{ json.text }}
     </div>
+    {%endif%}
+
     {% if 'warn' in json%}
-  <div class="alert alert-danger text-center">
-    {{ json.warn }}
-  </div>
-  {%endif%}
+    <div class="alert alert-danger text-center">
+      {{ json.warn }}
+    </div>
+    {%endif%}
     <div class="row">
       <div class="col"></div>
       <div class="col-md-2">
@@ -96,7 +108,9 @@
       <div class="col"></div>
     </div>
   </form>
-  <h1 style="text-align: center">Show Details</h1>
+  {% if 'ERROR1'  not in json%}
+
+  <h5 style="text-align: center">Show Details</h5>
   <table class="styled-table" style="margin-left: auto; margin-right: auto">
     <tr>
       <th>Show Name</th>
@@ -131,6 +145,7 @@
     </tr>
 
   </table>
+  {%endif%}
   {%endif%}
 </body>
 
