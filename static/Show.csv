@@ -1,0 +1,6 @@
+Id,Name,Movie Basic Fare,Duration,is 3D,Tags
+1,Test,110,123,True,Comedy;Comedy
+2,Thunivu,200,50,False,Comedy;Action;Drama
+3,3idiots,120,120,False,Fight
+4,War,120,180,False,Thriller;Action
+5,Avatar,110,176,True,Fiction;Action;Drama

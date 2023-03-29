@@ -14,8 +14,9 @@ def login():
         password = request.form['password']
         u1 = Users.query.filter_by()
         u1 = Users.query.filter_by(username=username,
-                                   password=password).first()
-        if u1 is None:
+                                  ).first()
+      
+        if u1 is None or (not u1.is_password_correct(password)):
             flash('Invalid Login details', "danger")
             return render_template("login/login.html", error=True)
         login_user(u1)
@@ -29,8 +30,8 @@ def adminLogin():
         username = request.form['loginId'].lower()
         password = request.form['password']
         u1 = Admin.query.filter_by(username=username,
-                                   password=password).first()
-        if u1 is None:
+                                   ).first()
+        if u1 is None or (not u1.is_password_correct(password)):
             flash('Invalid Login details', "danger")
             return render_template("login/adminlogin.html", error=True)
 

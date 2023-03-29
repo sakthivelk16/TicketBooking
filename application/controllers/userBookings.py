@@ -9,7 +9,7 @@ from datetime import datetime, timedelta
 @app.route("/user/bookings", methods={"GET", "POST"})
 @login_required
 def myBookings():
-    userBooking = BookingDetails.query.filter_by(user_id=current_user.user_id)
+    userBooking = BookingDetails.query.filter_by(user_id=current_user.user_id).order_by(BookingDetails.booking_id.desc()).all()
     final = []
     for eachBooking in userBooking:
         currentShowVenue = ShowVenue.query.get(eachBooking.sv_id)
@@ -75,7 +75,7 @@ def bookTicket(svId):
         tag = tag[1:]
     allRatings = {}
     for each in avgRatings:
-        allRatings[each[0]] = each[1]
+        allRatings[each[0]] = round(each[1],1)
     for each in allBookings:
         if each.sv_id in soldTick:
             soldTick[each.sv_id] = soldTick[each.sv_id] + each.ticket_count

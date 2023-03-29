@@ -201,7 +201,7 @@ def eachvenueDetails(a_id, venueId):
             query = query + " and time >= '" + request.form["from"] + "'"
             text = "Filtered Data from " + request.form["from"]
         if request.form["to"] != "":
-            query = query + " and time <= '" + request.form["to"] + "'"
+            query = query + " and time <= '" + request.form["to"] + "23:59'"
             if text == "Unfiltered Show Details":
                 text = "Filtered Data upto " + request.form["to"]
             else:

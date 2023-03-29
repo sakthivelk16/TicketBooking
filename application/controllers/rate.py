@@ -2,9 +2,7 @@ from flask import Flask, redirect, render_template, request, url_for, session
 from flask_login import current_user, login_required
 from models.module import *
 from flask import current_app as app
-from datetime import datetime
-from sqlalchemy import func
-from sqlalchemy.sql import label
+
 
 
 @app.route("/user/book/details/<int:bookId>", methods={"GET", "POST"})

@@ -17,6 +17,21 @@ def filterResult():
         return redirect("/user/search")
     filterVenue = session["venue"]
     session.pop("venue")
+    if "show" not in session:
+        sessionShow = None
+    else:
+        sessionShow = session["show"]
+        session.pop("show")
+    if "from" not in session:
+        sessionFrom = None
+    else:
+        sessionFrom = session["from"]
+        session.pop("from")
+    if "to" not in session:
+        sessionTo = None
+    else:
+        sessionTo = session["to"]
+        session.pop("to")
     allBookings = BookingDetails.query.all()
     soldTick = {}
     for each in allBookings:
@@ -31,7 +46,7 @@ def filterResult():
     )
     allRatings = {}
     for each in avgRatings:
-        allRatings[each[0]] = each[1]
+        allRatings[each[0]] = round(each[1], 1)
 
     tags = Showtag.query.all()
     allTags = {}
@@ -43,29 +58,31 @@ def filterResult():
 
     list = []
     currentTime = datetime.now()
-    if "from" in session and session["from"] != "":
-        if date.today()==datetime.strptime(session["from"], "%Y-%m-%d").date():
-            flash('Though you selected Today Date. All shows of today will not shown. Only future show will be shown','warning')
+    if sessionFrom is not None and sessionFrom != "":
+        if date.today() == datetime.strptime(sessionFrom, "%Y-%m-%d").date():
+            flash(
+                "Though you selected Today Date. All shows of today will not shown. Only future show will be shown",
+                "warning",
+            )
     for e in filterVenue:
         currentVenue = Venue.query.get(e)
-        if "show" in session:
+        if sessionShow is not None:
             allVenueShow = (
                 ShowVenue.query.filter(
                     ShowVenue.venue_id == currentVenue.venue_id,
+                    ShowVenue.show_id.in_(sessionShow),
                     ShowVenue.time > currentTime,
-                    ShowVenue.show_id.in_(session["show"]),
                 )
                 .order_by(ShowVenue.time)
                 .all()
             )
-            session.pop("show")
         elif (
-            "from" in session
-            and "to" in session
-            and session["from"] != ""
-            and session["to"] != ""
+            sessionFrom is not None
+            and sessionTo is not None
+            and sessionFrom != ""
+            and sessionTo != ""
         ):
-            t = datetime.strptime(session["to"], "%Y-%m-%d") + timedelta(
+            t = datetime.strptime(sessionTo, "%Y-%m-%d") + timedelta(
                 hours=23, minutes=59
             )
 
@@ -73,26 +90,26 @@ def filterResult():
                 ShowVenue.query.filter(
                     ShowVenue.venue_id == currentVenue.venue_id,
                     ShowVenue.time > currentTime,
-                    ShowVenue.time >= session["from"],
+                    ShowVenue.time >= sessionFrom,
                     ShowVenue.time <= t,
                 )
                 .order_by(ShowVenue.time)
                 .all()
             )
-        elif "from" in session and session["from"] != "":
+        elif sessionFrom is not None and sessionFrom != "":
             allVenueShow = (
                 ShowVenue.query.filter(
                     ShowVenue.venue_id == currentVenue.venue_id,
                     ShowVenue.time > currentTime,
-                    ShowVenue.time >= session["from"],
+                    ShowVenue.time >= sessionFrom,
                 )
                 .order_by(ShowVenue.time)
                 .all()
             )
-            if date.today()==datetime.strptime(session["from"], "%Y-%m-%d").date():
-                print('DONE')
-        elif "to" in session and session["to"] != "":
-            t = datetime.strptime(session["to"], "%Y-%m-%d") + timedelta(
+            if date.today() == datetime.strptime(sessionFrom, "%Y-%m-%d").date():
+                print("DONE")
+        elif sessionTo is not None and sessionTo != "":
+            t = datetime.strptime(sessionTo, "%Y-%m-%d") + timedelta(
                 hours=23, minutes=59
             )
 
@@ -115,6 +132,7 @@ def filterResult():
                 .order_by(ShowVenue.time)
                 .all()
             )
+        print(allVenueShow)
         if len(allVenueShow) > 0:
             eachjson = {}
             eachjson["venue_id"] = currentVenue.venue_id
@@ -214,6 +232,7 @@ def search():
                 )
             session["venue"] = ven
             return redirect(url_for("filterResult"))
+        
         if "show" in request.form:
             if request.form["show"] == "1":
                 s1 = Show.query.filter(
@@ -303,6 +322,7 @@ def search():
                     s = Show.query.get(each[0])
                     for v in s.venues:
                         ven.append(v.venue_id)
+            print(shows)
             if len(shows) == 0:
                 flash(
                     "There is no show found with provided search details. Try different Combination",
@@ -321,7 +341,9 @@ def search():
             ven = [*set(ven)]
             session["venue"] = ven
             session["show"] = shows
+            print(session)
             return redirect(url_for("filterResult"))
+        
         if "from" in request.form:
             shows = []
             ven = []

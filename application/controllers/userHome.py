@@ -1,6 +1,5 @@
 from flask_login import current_user, login_required
 from flask import render_template, flash, request, redirect
-from flask_login import current_user, login_required
 from sqlalchemy import func, label
 from models.module import *
 from flask import current_app as app
@@ -27,7 +26,7 @@ def userHome():
     )
     allRatings = {}
     for each in avgRatings:
-        allRatings[each[0]] = each[1]
+        allRatings[each[0]] = round(each[1],1)
 
     tags = Showtag.query.all()
     allTags = {}
@@ -61,15 +60,7 @@ def userHome():
             for ee in allVenueShow:
                 currentShow = Show.query.filter_by(show_id=ee.show_id).first()
 
-                # allSVID = ShowVenue.query.filter_by(show_id=ee.show_id).all()
-                # soldTicketCount = 0
-                # for eachSV in allSVID:
-                #     allBookingDetails = BookingDetails.query.filter_by(
-                #         sv_id=eachSV.sv_id).all()
-                #     print(allBookingDetails)
-                #     for eachBD in allBookingDetails:
-                #         soldTicketCount = soldTicketCount + eachBD.ticket_count
-
+              
                 innerjson = {}
                 innerjson["sv_id"] = ee.sv_id
                 innerjson["time"] = ee.time.strftime("%Y-%m-%d %I:%M %p")

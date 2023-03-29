@@ -1,5 +1,6 @@
 from flask_login import UserMixin
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import generate_password_hash, check_password_hash
 
 db = SQLAlchemy()
 
@@ -50,8 +51,24 @@ class Users(db.Model, UserMixin):
     )
     myratings = db.relationship("Show", backref="shoRatings", secondary="rating")
 
+    def __init__(
+        self, first_name, last_name, email_id, phone_number, username, password
+    ):
+        self.username = username
+        self.password = self.generate_password(password)
+        self.first_name = first_name    
+        self.last_name = last_name
+        self.email_id = email_id
+        self.phone_number = phone_number
+
     def get_id(self):
         return self.user_id
+
+    def is_password_correct(self, password_plaintext: str):
+        return check_password_hash(self.password, password_plaintext)
+
+    def generate_password(self, password_plaintext: str):
+        return generate_password_hash(password_plaintext)
 
 
 class Admincode(db.Model):
@@ -67,6 +84,23 @@ class Admin(db.Model):
     email_id = db.Column(db.String(32), unique=True, nullable=False)
     username = db.Column(db.String(32), unique=True, nullable=False)
     password = db.Column(db.String(32), nullable=False)
+   
+    def __init__(
+        self, first_name, last_name, email_id, phone_number, username, password
+    ):
+        self.username = username
+        self.password = self.generate_password(password)
+        self.first_name = first_name    
+        self.last_name = last_name
+        self.email_id = email_id
+        self.phone_number = phone_number
+
+
+    def is_password_correct(self, password_plaintext: str):
+        return check_password_hash(self.password, password_plaintext)
+
+    def generate_password(self, password_plaintext: str):
+        return generate_password_hash(password_plaintext)
 
 
 class Rating(db.Model):

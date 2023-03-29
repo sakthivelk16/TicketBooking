@@ -71,7 +71,7 @@ def showValidation(type):
             raise BuisnessValidationError(
                 400, "SHOW007", "minimum Fare should be greater than 0"
             )
-        if min_fare > 300 and min_fare<50:
+        if min_fare > 300 or min_fare<50:
                 raise BuisnessValidationError(
                 400, "MIN_MAX_Conflict", "Movie Fare details should be 50 to 300"
             )
@@ -84,7 +84,7 @@ def showValidation(type):
             raise BuisnessValidationError(
                 400, "SHOW009", "duration should be greater than 0"
             )
-        if min_fare > 200 and min_fare<30:
+        if min_fare > 200 or min_fare<30:
                 raise BuisnessValidationError(
                 400, "MIN_MAX_Conflict", "Movie Duration should be 30 to 200 mins"
             )

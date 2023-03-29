@@ -26,7 +26,7 @@ def adminPassword(adminId):
             return render_template(
                 "resetPassword.html", username=user.username, userId=adminId, admin=True
             )
-        if request.form["password"] != user.password:
+        if not user.is_password_correct(request.form["password"]):
             flash(
                 "Your entered wrong current password. Enter correct one to proceed",
                 "danger",
@@ -39,7 +39,7 @@ def adminPassword(adminId):
             return render_template(
                 "resetPassword.html", username=user.username, userId=adminId, admin=True
             )
-        user.password = request.form["newpassword"]
+        user.password = user.generate_password(request.form["newpassword"])
         db.session.commit()
         return redirect("/admin/" + str(adminId) + "/profile")
     user = Admin.query.get(adminId)

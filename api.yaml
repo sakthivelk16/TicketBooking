@@ -67,7 +67,7 @@ info:
       <tr>
         <td>Venue</td>
         <td>VENUE012</td>
-        <td>Venue cannot be delete where Since show is allocated to this venue</td>
+        <td>Venue cannot be delete  Since show is allocated to this venue</td>
       </tr>
       <tr>
         <td>Show</td>
@@ -223,7 +223,7 @@ paths:
           required: true
           schema:
             type: integer
-            example: 201
+            example: 1
       requestBody:
         content:
           application/json:
@@ -413,7 +413,7 @@ paths:
                     type: integer
                     example: "200"
                   is3d:
-                    type: string
+                    type: boolean
                     example: "true"
                   tags:
                     type: string
@@ -447,7 +447,7 @@ paths:
                   type: integer
                   example: "200"
                 is3d:
-                  type: string
+                  type: boolean
                   example: "true"
                 tags:
                   type: string
@@ -473,7 +473,7 @@ paths:
                     type: integer
                     example: "200"
                   is3d:
-                    type: string
+                    type: boolean
                     example: "true"
                   tags:
                     type: string
@@ -529,7 +529,7 @@ paths:
                   type: integer
                   example: "200"
                 is3d:
-                  type: string
+                  type: boolean
                   example: "true"
                 tags:
                   type: string
@@ -556,7 +556,7 @@ paths:
                     type: integer
                     example: "200"
                   is3d:
-                    type: string
+                    type: boolean
                     example: "true"
                   tags:
                     type: string

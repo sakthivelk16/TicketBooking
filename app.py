@@ -63,6 +63,7 @@ from application.controllers.adminProfile import *
 from application.controllers.userProfile import *
 from application.controllers.userHome import *
 from application.controllers.adminHome import *
+from application.controllers.excel import *
 
 if __name__ == "__main__":
     app.debug = True

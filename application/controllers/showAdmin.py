@@ -1,5 +1,6 @@
 import sqlite3
 from flask import  flash, session, redirect, render_template, request, url_for
+from sqlalchemy import func
 from models.module import *
 from flask import current_app as app
 from datetime import  timedelta
@@ -236,11 +237,14 @@ def eachShowDetails(a_id, showId):
     text = "Unfiltered Show Details"
     query = "show_id=" + str(showId)
     if request.method == "POST":
+        # t = datetime.strptime(sessionTo, "%Y-%m-%d") + timedelta(
+        #         hours=23, minutes=59
+            # )
         if request.form["from"] != "":
             query = query + " and time >= '" + request.form["from"] + "'"
             text = "Filtered Data from " + request.form["from"]
         if request.form["to"] != "":
-            query = query + " and time <= '" + request.form["to"] + "'"
+            query = query + " and time <= '" + request.form["to"] + "23:59'"
             if text == "Unfiltered Show Details":
                 text = "Filtered Data upto " + request.form["to"]
             else:
@@ -286,5 +290,7 @@ def eachShowDetails(a_id, showId):
     json["run"] = b[0]
     cur.close()
     conn.close()
+    showRate=Rating.query.filter(Rating.show_id==showId).with_entities(func.avg(Rating.rating)).first()
+    json["rate"] = 'Not Rated yet' if showRate[0] is None else round(showRate[0],1)
     json["percent"] = round(json["bookedTicket"] / json["availed"] * 100)
     return render_template("admin/showDetails.html", adminId=a_id, json=json)

@@ -41,13 +41,16 @@
   </div>
   {% endfor %}
 
-  <div style="text-align: center;">
+  
     <a href="/admin/{{adminId}}/show/create" class="btn btn-primary">Create New Show</a>
 
-  </div>
+  
 
   {% if allShow|length ==0 %}
   <h5 style="text-align: center;">No show are Created. Create A new one</h5>
+  {%else%}
+  <a href="/admin/{{adminId}}/show/download" class="btn btn-primary">Download as CSV</a>
+
   {%endif%}
   <div class="row" style="margin-top: 10px">
     {%for each in allShow%}

@@ -1,4 +1,6 @@
+from datetime import datetime
 from flask_restful import reqparse, Resource, Api
+from sqlalchemy import func
 from werkzeug.exceptions import HTTPException
 import json
 from flask import make_response
@@ -51,31 +53,30 @@ def venueValidation(type):
         raise BuisnessValidationError(400, "VENUE004", "fare2D is required")
     if (fare3D is None and type == "post") or fare3D == "":
         raise BuisnessValidationError(400, "VENUE005", "fare3D is required")
-    
-    if venue_name is not None and len(venue_name)>32:
+
+    if venue_name is not None and len(venue_name) > 32:
         raise BuisnessValidationError(
-                400, "MIN_MAX_Conflict", "Venue Name length should below 32"
-            )
-    if place is not None and len(place)>32:
+            400, "MIN_MAX_Conflict", "Venue Name length should below 32"
+        )
+    if place is not None and len(place) > 32:
         raise BuisnessValidationError(
-                400, "MIN_MAX_Conflict", "Venue place length should below 32"
-            )
-    if location is not None and len(location)>32:
+            400, "MIN_MAX_Conflict", "Venue place length should below 32"
+        )
+    if location is not None and len(location) > 32:
         raise BuisnessValidationError(
-                400, "MIN_MAX_Conflict", "Venue Location length should below 32"
-            )
+            400, "MIN_MAX_Conflict", "Venue Location length should below 32"
+        )
 
     if max_capacity is not None:
         max_capacity = verifyInterger(
             max_capacity, 400, "VENUE006", "max_capacity should be integer"
         )
 
-        
         if max_capacity <= 0:
             raise BuisnessValidationError(
                 400, "VENUE007", "max_capacity should be greater than 0"
             )
-        if max_capacity > 300 and max_capacity<10:
+        if max_capacity > 300 or max_capacity < 10:
             raise BuisnessValidationError(
                 400, "MIN_MAX_Conflict", "Venue capacity should be 10 to 300"
             )
@@ -86,7 +87,7 @@ def venueValidation(type):
             raise BuisnessValidationError(
                 400, "VENUE009", "fare2D should be greater than 0"
             )
-        if fare2D > 300 and fare2D<50:
+        if fare2D > 300 or fare2D < 50:
             raise BuisnessValidationError(
                 400, "MIN_MAX_Conflict", "Venue Fare should be 50 to 300"
             )
@@ -98,7 +99,7 @@ def venueValidation(type):
             raise BuisnessValidationError(
                 400, "VENUE011", "fare3D should be greater than 0"
             )
-        if fare3D > 300 and fare3D<50:
+        if fare3D > 300 or fare3D < 50:
             raise BuisnessValidationError(
                 400, "MIN_MAX_Conflict", "Venue Fare should be 50 to 300"
             )
@@ -172,18 +173,52 @@ class VenueAPI(Resource):
         fare2D = args.get("fare2D", None)
         fare3D = args.get("fare3D", None)
 
+        
+   
         if venue_name is not None:
             currentVenue.venue_name = venue_name.lower()
         if place is not None:
             currentVenue.place = place.lower()
         if location is not None:
-            currentVenue.venue_name = location.lower()
+            currentVenue.location = location.lower()
         if max_capacity is not None:
+            sv_idd = ShowVenue.query.filter(
+                ShowVenue.venue_id == venueId, ShowVenue.time > datetime.now()
+            ).all()
+            y = [x.sv_id for x in sv_idd]
+            res = (
+                BookingDetails.query.filter(BookingDetails.sv_id.in_(y))
+                .with_entities(
+                    func.sum(BookingDetails.ticket_count).label("total"),
+                    BookingDetails.sv_id,
+                )
+                .group_by(BookingDetails.sv_id)
+                .all()
+            )
+            z = [s[0] for s in res]
+            z = max(z, default=10)
+            if int(max_capacity) < int(z):
+                raise BuisnessValidationError(
+                    400,
+                    "VENUE015",
+                    "A particular show has "
+                    + str(z)
+                    + " bookin. So capacity cannot updated below "
+                    + str(z)
+                    + " until show completes",
+                )
             currentVenue.max_capacity = max_capacity
         if fare2D is not None:
             currentVenue.fare2D = fare2D
         if fare3D is not None:
             currentVenue.fare3D = fare3D
+        currentVenueId = Venue.query.filter(
+            Venue.venue_name==currentVenue.venue_name.lower(), Venue.location==currentVenue.location.lower(),Venue.venue_id!=venueId
+        ).first()
+        if currentVenueId:
+            db.session.rollback()
+
+            raise NotFoundError(409)
 
         db.session.commit()
         currentVenue = Venue.query.get(venueId)
@@ -195,7 +230,7 @@ class VenueAPI(Resource):
             "max_capacity": currentVenue.max_capacity,
             "fare2D": currentVenue.fare2D,
             "fare3D": currentVenue.fare3D,
-        }, 201
+        }, 
 
     def delete(self, venueId):
         currentVenue = Venue.query.get(venueId)
@@ -204,7 +239,7 @@ class VenueAPI(Resource):
             raise BuisnessValidationError(
                 400,
                 "VENUE012",
-                "Venue cannot be delete where Since show is allocated to this venue",
+                "Venue cannot be delete  Since show is allocated to this venue",
             )
 
         if currentVenue:

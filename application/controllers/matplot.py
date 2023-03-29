@@ -5,16 +5,18 @@ from flask import flash, redirect, render_template, request, url_for
 from models.module import *
 from flask import current_app as app
 import os
-from application.api.allocation import generatedateTime
 import sys
-matplotlib.use('Agg')
+from datetime import datetime, timedelta
+
+matplotlib.use("Agg")
+
 
 def subplot():
     try:
         conn = sqlite3.connect("instance/database.sqlite3")
         cur = conn.cursor()
         res = cur.execute(
-            "SELECT total(totalprice),venue_name from(SELECT ticket_count*ticket_fare as totalprice,Venue_name from booking_details natural join show_venue natural join venue) group By(Venue_name) limit 5;"
+            "SELECT sum(ticket_count*ticket_fare) as tot,Venue_name from booking_details natural join show_venue natural join venue group By(Venue_name) order by tot desc limit 5"
         )
         valu, txt = [], []
         for each in res.fetchall():
@@ -28,10 +30,8 @@ def subplot():
         plt.title("Venue with Highest Collection")
         plt.savefig("static/venueCollection.png")
 
-       
-
         res = cur.execute(
-            "SELECT avg(rating),show_name from rating natural JOIN show group by show_id limit 5"
+            "SELECT avg(rating) as aver,show_name from rating natural JOIN show group by show_id order by aver desc limit 5"
         )
         valu, txt = [], []
 
@@ -49,7 +49,9 @@ def subplot():
         # if val == 'tagcount':
         # tatal show per tags
 
-        res = cur.execute("SELECT count(*),tags from showtag group by tags limit 5")
+        res = cur.execute(
+            "SELECT count(*) as ct,tags from showtag group by tags order by ct desc limit 5"
+        )
         valu, txt = [], []
         for each in res.fetchall():
             valu.append(each[0])
@@ -85,7 +87,7 @@ def subplot():
         )
         valu, txt = [], []
         for each in res.fetchall():
-            valu.append(each[0]*100)
+            valu.append(each[0] * 100)
             txt.append(each[1].capitalize())
 
         plt.clf()
@@ -106,7 +108,7 @@ def venuePlot(endQuery):
     try:
         conn = sqlite3.connect("instance/database.sqlite3")
         cur = conn.cursor()
-        
+
         plt.clf()
         res = cur.execute(
             "SELECT count(*) as total_show, show_name from venue natural join show natural join show_venue where "
@@ -118,7 +120,6 @@ def venuePlot(endQuery):
         for each in res.fetchall():
             valu.append(each[0])
             txt.append(each[1].capitalize())
-
 
         plt.bar(txt, valu, color="maroon", width=0.4)
         plt.xlabel("Show Name")
@@ -160,7 +161,6 @@ def venuePlot(endQuery):
         plt.title("Shows with minimum Revenue")
         plt.savefig("static/showRevenueatVenueMin.png")
 
-
         res = cur.execute(
             "SELECT sum(ticket_count)/(sum(max_capacity)*1.0) as book_percent,show_name from booking_details natural join show_venue natural join show natural join venue where "
             + endQuery
@@ -168,9 +168,8 @@ def venuePlot(endQuery):
         )
         valu, txt = [], []
         for each in res.fetchall():
-            valu.append(each[0]*100)
+            valu.append(each[0] * 100)
             txt.append(each[1].capitalize())
-
 
         plt.clf()
         plt.bar(txt, valu, color="maroon", width=0.4)
@@ -186,7 +185,7 @@ def venuePlot(endQuery):
         )
         valu, txt = [], []
         for each in res.fetchall():
-            valu.append(each[0]*100)
+            valu.append(each[0] * 100)
             txt.append(each[1].capitalize())
 
         plt.clf()
@@ -196,7 +195,7 @@ def venuePlot(endQuery):
         plt.title("Shows with minimum  booking Percent")
         plt.savefig("static/showBookPercentMin.png")
 
-    except :
+    except:
         e = sys.exc_info()[0]
         print(e)
         pass
@@ -210,7 +209,6 @@ def showPlot(endQuery):
         conn = sqlite3.connect("instance/database.sqlite3")
         cur = conn.cursor()
 
-       
         plt.clf()
         res = cur.execute(
             "SELECT count(*) as total_venue, venue_name from venue natural join show natural join show_venue where "
@@ -269,7 +267,7 @@ def showPlot(endQuery):
         )
         valu, txt = [], []
         for each in res.fetchall():
-            valu.append(each[0]*100)
+            valu.append(each[0] * 100)
             txt.append(each[1].capitalize())
 
         plt.clf()
@@ -286,7 +284,7 @@ def showPlot(endQuery):
         )
         valu, txt = [], []
         for each in res.fetchall():
-            valu.append(each[0]*100)
+            valu.append(each[0] * 100)
             txt.append(each[1].capitalize())
 
         plt.clf()
@@ -324,10 +322,13 @@ def summaryAdvanced(adminId):
             os.makedirs(path)
         sti = request.form["startTime"]
         eti = request.form["endTime"]
+
         if sti != "":
-            stime = generatedateTime(request.form["startTime"])
+            stime = datetime.strptime(request.form["startTime"], "%Y-%m-%d")
         if eti != "":
-            etime = generatedateTime(request.form["endTime"])
+            etime = datetime.strptime(request.form["endTime"], "%Y-%m-%d") + timedelta(
+                hours=23, minutes=59
+            )
         if sti != "" and eti != "" and stime > etime:
             flash(
                 "start time is greater than end time ans search is not possible",
@@ -363,7 +364,7 @@ def summaryAdvanced(adminId):
                     ShowVenue.time > stime,
                     ShowVenue.time < etime,
                 ).all()
-            if len(s1)==0:
+            if len(s1) == 0:
                 flash(
                     "No data are avilable with filtered result",
                     "danger",
@@ -376,16 +377,22 @@ def summaryAdvanced(adminId):
                     show=allShow,
                     venue=allVen,
                 )
-            query = 'venue_name="' +  request.form["venue"].split("-")[0] + '" and location="' +  request.form["venue"].split("-")[1] + '" '
+            query = (
+                'venue_name="'
+                + request.form["venue"].split("-")[0]
+                + '" and location="'
+                + request.form["venue"].split("-")[1]
+                + '" '
+            )
             if sti != "":
                 query = query + ' and time >= "' + request.form["startTime"] + '"'
             if eti != "":
-                query = query + ' and time <= "' + request.form["endTime"] + '"'
+                query = query + ' and time <= "' + request.form["endTime"] + '23:59"'
             venuePlot(query)
             return render_template("admin/venueSummary.html", adminId=adminId)
 
         if "showSubmit" in request.form:
-            filShow=Show.query.filter_by(show_name=request.form["show"] ).first()
+            filShow = Show.query.filter_by(show_name=request.form["show"]).first()
             if sti == "" and eti == "":
                 s1 = ShowVenue.query.filter_by(show_id=filShow.show_id).all()
             elif sti == "":
@@ -402,7 +409,7 @@ def summaryAdvanced(adminId):
                     ShowVenue.time > stime,
                     ShowVenue.time < etime,
                 ).all()
-            if len(s1)==0:
+            if len(s1) == 0:
                 flash(
                     "No data are avilable with filtered result",
                     "danger",
@@ -419,7 +426,7 @@ def summaryAdvanced(adminId):
             if request.form["startTime"] != "":
                 query = query + ' and time >= "' + request.form["startTime"] + '"'
             if request.form["endTime"] != "":
-                query = query + ' and time <= "' + request.form["endTime"] + '"'
+                query = query + ' and time <= "' + request.form["endTime"] + '23:59"'
             showPlot(query)
             return render_template("admin/showSummary.html", adminId=adminId)
 

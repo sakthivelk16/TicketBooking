@@ -35,8 +35,8 @@ def userValidating(user):
 
     if user.password is None or user.password == "":
         return (True, "password should not be empty")
-    if len(user.password) > 32 or len(user.password) < 8:
-        return (True, "password Should be 8 to 32 character")
+    if  len(user.password) < 8:
+        return (True, "password Should greater than 8  character")
 
     return (False, None)
 
@@ -69,8 +69,9 @@ def adminValidating(user):
 
     if user.password is None or user.password == "":
         return (True, "password should not be empty")
-    if len(user.password) > 32:
-        return (True, "password Should be 8 to 32 character")
+    if  len(user.password) < 8:
+        return (True, "password Should greater than 8  character")
+
 
     return (False, None)
 

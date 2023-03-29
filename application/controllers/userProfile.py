@@ -25,7 +25,7 @@ def userPassword():
         if request.form["newpassword"] != request.form["cnewpassword"]:
             flash("New password and confirm new password should be same", "danger")
             return render_template("resetPassword.html", username=user.username)
-        if request.form["password"] != user.password:
+        if not user.is_password_correct(request.form["password"]):
             flash(
                 "Your entered wrong current password. Enter correct one to proceed",
                 "danger",
@@ -34,7 +34,7 @@ def userPassword():
         if len(request.form["password"]) < 8 or len(request.form["password"]) > 32:
             flash("Password should be 8 to 32 character", "warning")
             return render_template("resetPassword.html", username=user.username)
-        user.password = request.form["newpassword"]
+        user.password = user.generate_password(request.form["newpassword"])
         db.session.commit()
         return redirect("/user/profile")
     return render_template("resetPassword.html", username=user.username)
